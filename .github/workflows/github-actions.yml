@@ -1,6 +1,9 @@
 name: Check GCP Versions
 run-name: ${{ github.actor }} is checking PAN-OS versions on GCP
-on: [push]
+on:
+  push:
+  schedule:
+    - cron: "0 */6 * * *"
 
 jobs:
   panos-checker:
