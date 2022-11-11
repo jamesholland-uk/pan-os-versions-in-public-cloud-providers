@@ -2,6 +2,8 @@
 
 This project exists to track the versions of base PAN-OS images which are present within major Cloud Service Providers. The list of versions is retrieved and parsed directly from the Cloud Service Providers via their APIs.
 
+![Workflow Badge](https://github.com/jamesholland-uk/pan-os-csp-versions/actions/workflows/github-actions.yml/badge.svg)
+
 ## Lists
 
 Today, this project includes lists of base PAN-OS image versions currently present on:
