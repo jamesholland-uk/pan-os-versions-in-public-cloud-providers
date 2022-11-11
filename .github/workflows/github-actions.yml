@@ -1,0 +1,45 @@
+name: Check GCP Versions
+run-name: ${{ github.actor }} is checking PAN-OS versions on GCP
+on: [push]
+
+jobs:
+  panos-checker:
+    name: "panos-checker"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - uses: "actions/checkout@v3"
+        with:
+          ref: ${{ github.head_ref }}
+
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: "${{ secrets.GCP_CREDS }}"
+
+      # Install gcloud, `setup-gcloud` automatically picks up authentication from `auth`
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+
+      - name: "Get PAN-OS base images lists"
+        run: |-
+          gcloud compute images list --project paloaltonetworksgcp-public --no-standard-images --format="value(NAME)" --filter="name~'vmseries'" > list.txt
+
+      - name: "test: dump list"
+        run: |-
+          cat list.txt
+
+      - name: Commit
+        run: |-
+          git config user.name "Jimmy"
+          git config user.email "jamesholland-uk@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}          
+          git add list.txt
+          timestamp=$(date -u)
+          git commit -m "Latest data: ${timestamp}" || exit 0
+
+      - name: Push
+        run: |-
+          git push
