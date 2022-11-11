@@ -23,20 +23,20 @@ jobs:
       - name: "Set up Cloud SDK"
         uses: "google-github-actions/setup-gcloud@v1"
 
-      - name: "Get PAN-OS base images lists"
+      - name: "Get GCP PAN-OS base images lists"
         run: |-
-          gcloud compute images list --project paloaltonetworksgcp-public --no-standard-images --format="value(NAME)" --filter="name~'vmseries'" > list.txt
+          gcloud compute images list --project paloaltonetworksgcp-public --no-standard-images --format="value(NAME)" --filter="name~'vmseries'" > gcp-list.txt
 
-      - name: "test: dump list"
+      - name: Run GCP post-processing
         run: |-
-          cat list.txt
+          ./python3 gcp-processing.py gcp-list.txt > gcp.md
 
       - name: Commit
         run: |-
           git config user.name "Jimmy"
           git config user.email "jamesholland-uk@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}          
-          git add list.txt
+          git add gcp.md
           timestamp=$(date -u)
           git commit -m "Latest data: ${timestamp}" || exit 0
 
