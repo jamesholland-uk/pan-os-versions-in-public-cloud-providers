@@ -29,7 +29,7 @@ jobs:
 
       - name: Run GCP post-processing
         run: |-
-          ./python3 gcp-processing.py gcp-list.txt > gcp.md
+          gcp-processing.py gcp-list.txt > gcp.md
 
       - name: Commit
         run: |-
