@@ -11,6 +11,10 @@ Today, this project includes lists of base PAN-OS image versions currently prese
 
 More to come in future...
 
+## Ackowledgements
+
+The inspiration for this project came from this great idea by @jtschichold and his [IOC tracker](https://github.com/jtschichold/panwdbl-actions)
+
 ## Support
 
 This project is released under an as-is, best effort, support policy. This should be seen as community supported. There is no expectation of technical support or help in using or troubleshooting the components of the project. This projects is in no way affiliated or supported by Palo Alto Networks, its support teams, or its ASC (Authorized Support Centers) partners.
