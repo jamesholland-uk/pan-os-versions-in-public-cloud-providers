@@ -16,8 +16,8 @@ More to come in future...
 
 ## Acknowledgements
 
-- The inspiration for this project came from this great idea by [@jtschichold] (https://www.github.com/jtschichold) and his [IOC tracker](https://github.com/jtschichold/panwdbl-actions)
-- Many thanks to [@lachlanjholmes] (https://www.github.com/lachlanjholmes) for contributing the AWS code
+- The inspiration for this project came from this great idea by [@jtschichold](https://www.github.com/jtschichold) and his [IOC tracker](https://github.com/jtschichold/panwdbl-actions)
+- Many thanks to [@lachlanjholmes](https://www.github.com/lachlanjholmes) for contributing the AWS code
 
 ## Support
 
