@@ -1,0 +1,45 @@
+name: Check AWS Versions
+run-name: ${{ github.actor }} is checking PAN-OS versions on AWS
+on:
+  push:
+  schedule:
+    - cron: "0 */6 * * *"
+
+jobs:
+  panos-checker:
+    name: "panos-checker"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - uses: "actions/checkout@v3"
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: "Get AWS PAN-OS base images lists"
+        run: |-
+          aws ec2 describe-images --filters  "Name=name,Values=PA-VM-AWS*"  --output yaml > palo.yaml
+
+      - name: Run AWS post-processing
+        run: |-
+          python aws-processing.py palo.yaml > aws.md
+
+      - name: Commit
+        run: |-
+          git config user.name "Lachlan"
+          git config user.email "lachlanjholmes@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GIT_TOKEN }}@github.com/${{ github.repository }}          
+          git add aws.md
+          timestamp=$(date -u)
+          git commit -m "Latest data: ${timestamp}" || exit 0
+
+      - name: Push
+        run: |-
+          git push
