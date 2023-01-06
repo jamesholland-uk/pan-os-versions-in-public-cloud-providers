@@ -3,19 +3,21 @@
 This project exists to track the versions of base PAN-OS images which are present within major Cloud Service Providers. The list of versions is retrieved and parsed directly from the Cloud Service Providers via their APIs.
 
 ![Workflow Badge](https://github.com/jamesholland-uk/pan-os-csp-versions/actions/workflows/gcp-actions.yml/badge.svg)
+![Workflow Badge](https://github.com/jamesholland-uk/pan-os-csp-versions/actions/workflows/aws-actions.yml/badge.svg)
 
 ## Lists
 
 Today, this project includes lists of base PAN-OS image versions currently present on:
 
-- [GCP](gcp.md)
 - [AWS](aws.md)
+- [GCP](gcp.md)
 
 More to come in future...
 
 ## Acknowledgements
 
-The inspiration for this project came from this great idea by [@jtschichold] (https://www.github.com/jtschichold) and his [IOC tracker](https://github.com/jtschichold/panwdbl-actions)
+- The inspiration for this project came from this great idea by [@jtschichold] (https://www.github.com/jtschichold) and his [IOC tracker](https://github.com/jtschichold/panwdbl-actions)
+- Many thanks to [@lachlanjholmes] (https://www.github.com/lachlanjholmes) for contributing the AWS code
 
 ## Support
 
