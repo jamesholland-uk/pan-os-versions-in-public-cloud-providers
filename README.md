@@ -8,10 +8,11 @@ This project exists to track the versions of base PAN-OS images which are presen
 
 Today, this project includes lists of base PAN-OS image versions currently present on:
 - [GCP](gcp.md)
+- [AWS](aws.md)
 
 More to come in future...
 
-## Ackowledgements
+## Acknowledgements
 
 The inspiration for this project came from this great idea by @jtschichold and his [IOC tracker](https://github.com/jtschichold/panwdbl-actions)
 
