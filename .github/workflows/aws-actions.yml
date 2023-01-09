@@ -23,20 +23,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: "Get AWS PAN-OS base images lists"
+      - name: Run AWS processing
         run: |-
-          aws ec2 describe-images --filters  "Name=name,Values=PA-VM-AWS*"  --output yaml > palo.yaml
-
-      - name: Run AWS post-processing
-        run: |-
-          python aws-processing.py palo.yaml > aws.md
+          pip install boto3
+          python aws-processing.py
 
       - name: Commit
         run: |-
           git config user.name "Lachlan"
           git config user.email "lachlanjholmes@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GIT_TOKEN }}@github.com/${{ github.repository }}          
-          git add aws.md
+          git add --all
           timestamp=$(date -u)
           git commit -m "Latest data: ${timestamp}" || exit 0
 
