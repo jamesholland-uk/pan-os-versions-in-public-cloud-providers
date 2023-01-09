@@ -25,6 +25,7 @@ jobs:
 
       - name: Run AWS processing
         run: |-
+          pip install boto3
           python aws-processing.py
 
       - name: Commit
