@@ -32,7 +32,7 @@ jobs:
           git config user.name "Lachlan"
           git config user.email "lachlanjholmes@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GIT_TOKEN }}@github.com/${{ github.repository }}          
-          git add aws.md
+          git add --all
           timestamp=$(date -u)
           git commit -m "Latest data: ${timestamp}" || exit 0
 
