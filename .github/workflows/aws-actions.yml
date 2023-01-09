@@ -23,13 +23,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: "Get AWS PAN-OS base images lists"
+      - name: Run AWS processing
         run: |-
-          aws ec2 describe-images --filters  "Name=name,Values=PA-VM-AWS*"  --output yaml > palo.yaml
-
-      - name: Run AWS post-processing
-        run: |-
-          python aws-processing.py palo.yaml > aws.md
+          python aws-processing.py
 
       - name: Commit
         run: |-
