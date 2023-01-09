@@ -10,6 +10,7 @@ https://docs.paloaltonetworks.com/vm-series/11-0/vm-series-deployment/set-up-the
 byol = '6njl1pau431dv1qxipg63mvah'
 bundle1 = 'e9yfvyj3uag5uo5j2hjikv74n'
 bundle2 = 'hd44w1chf26uv4p52cdynb2o'
+marketplace_owner_id = '679593333241'
 
 # Create a boto3 session
 session = boto3.Session()
@@ -33,7 +34,7 @@ try:
         ami_images = ec2.describe_images(Filters=[{'Name': 'name', 'Values': ['PA-VM-AWS*']}])
 
         for ami in ami_images['Images']:
-            if ami['ProductCodes'][0]['ProductCodeId'] == byol:
+            if ami['ProductCodes'][0]['ProductCodeId'] == byol and ami['OwnerId'] == marketplace_owner_id:
                 # Checks if the version of panos is a Hotfix or not.
                 match = re.search(r'.*PA-VM-AWS-(\d+.\d+.\d+-h\d{1,2})-', ami['Name'])
                 if match:
@@ -50,7 +51,7 @@ try:
                     amis_by_version_byol[ver][region] = ami['ImageId']
 
         for ami in ami_images['Images']:
-            if ami['ProductCodes'][0]['ProductCodeId'] == bundle1:
+            if ami['ProductCodes'][0]['ProductCodeId'] == bundle1 and ami['OwnerId'] == marketplace_owner_id:
                 # Checks if the version of panos is a Hotfix or not.
                 match = re.search(r'.*PA-VM-AWS-(\d+.\d+.\d+-h\d{1,2}|)-', ami['Name'])
                 if match:
@@ -67,7 +68,7 @@ try:
                     amis_by_version_bundle1[ver][region] = ami['ImageId']
 
         for ami in ami_images['Images']:
-            if ami['ProductCodes'][0]['ProductCodeId'] == bundle2:
+            if ami['ProductCodes'][0]['ProductCodeId'] == bundle2 and ami['OwnerId'] == marketplace_owner_id:
                 # Checks if the version of panos is a Hotfix or not.
                 match = re.search(r'.*PA-VM-AWS-(\d+.\d+.\d+-h\d{1,2})-', ami['Name'])
                 if match:
