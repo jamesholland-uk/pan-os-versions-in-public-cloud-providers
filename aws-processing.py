@@ -1,5 +1,4 @@
 import sys
-# import yaml
 import boto3
 import re
 
@@ -20,9 +19,11 @@ client = boto3.client('ec2')
 regions = [region['RegionName'] for region in client.describe_regions()['Regions']]
 
 try:
+    # Initialise an empty list to store version numbers based on licensing model
     list_of_byol = []
     list_of_bundle1 = []
     list_of_bundle2 = []
+    # Initialise an empty dictionaries to store AMI IDs based on licensing model
     amis_by_version_byol = {}
     amis_by_version_bundle1 = {}
     amis_by_version_bundle2 = {}
@@ -33,55 +34,79 @@ try:
 
         ami_images = ec2.describe_images(Filters=[{'Name': 'name', 'Values': ['PA-VM-AWS*']}])
 
+        # Iterate through each AMI image
         for ami in ami_images['Images']:
+            # Check if AMI is BYOL and owned by the marketplace owner
             if ami['ProductCodes'][0]['ProductCodeId'] == byol and ami['OwnerId'] == marketplace_owner_id:
-                # Checks if the version of panos is a Hotfix or not.
+                # Extract the version number from the AMI name
+                # Check if the version is a hotfix (i.e. ends with "-hXX")
                 match = re.search(r'.*PA-VM-AWS-(\d+.\d+.\d+-h\d{1,2})-', ami['Name'])
                 if match:
+                    # Extract the version number from the match
                     ver = match.group(1)
                     list_of_byol.append(ver)
                     if ver not in amis_by_version_byol:
                         amis_by_version_byol[ver] = {}
                     amis_by_version_byol[ver][region] = ami['ImageId']
                 else:
+                    # Split the AMI name by hyphens and extract the 4th element (i.e. the version number)
                     ver = ami['Name'].split("-")[3]
+                    # Add the version number to the list of BYOL versions
                     list_of_byol.append(ver)
+                    # If the version number is not already a key in the dictionary, add it
                     if ver not in amis_by_version_byol:
                         amis_by_version_byol[ver] = {}
+                    # Add the AMI ID to the dictionary, with the region as the key
                     amis_by_version_byol[ver][region] = ami['ImageId']
 
+        # Iterate through each AMI image
         for ami in ami_images['Images']:
+            # Check if AMI is BUNDLE1 and owned by the marketplace owner
             if ami['ProductCodes'][0]['ProductCodeId'] == bundle1 and ami['OwnerId'] == marketplace_owner_id:
-                # Checks if the version of panos is a Hotfix or not.
+                # Extract the version number from the AMI name
+                # Check if the version is a hotfix (i.e. ends with "-hXX")
                 match = re.search(r'.*PA-VM-AWS-(\d+.\d+.\d+-h\d{1,2}|)-', ami['Name'])
                 if match:
+                    # Extract the version number from the match
                     ver = match.group(1)
                     list_of_bundle1.append(ver)
                     if ver not in amis_by_version_bundle1:
                         amis_by_version_bundle1[ver] = {}
                     amis_by_version_bundle1[ver][region] = ami['ImageId']
                 else:
+                    # Split the AMI name by hyphens and extract the 4th element (i.e. the version number)
                     ver = ami['Name'].split("-")[3]
+                    # Add the version number to the list of BUNDLE1 versions
                     list_of_bundle1.append(ver)
+                    # If the version number is not already a key in the dictionary, add it
                     if ver not in amis_by_version_bundle1:
                         amis_by_version_bundle1[ver] = {}
+                    # Add the AMI ID to the dictionary, with the region as the key
                     amis_by_version_bundle1[ver][region] = ami['ImageId']
 
+        # Iterate through each AMI image
         for ami in ami_images['Images']:
+            # Check if AMI is BUNDLE2 and owned by the marketplace owner
             if ami['ProductCodes'][0]['ProductCodeId'] == bundle2 and ami['OwnerId'] == marketplace_owner_id:
-                # Checks if the version of panos is a Hotfix or not.
+                # Extract the version number from the AMI name
+                # Check if the version is a hotfix (i.e. ends with "-hXX")
                 match = re.search(r'.*PA-VM-AWS-(\d+.\d+.\d+-h\d{1,2})-', ami['Name'])
                 if match:
+                    # Extract the version number from the match
                     ver = match.group(1)
                     list_of_bundle2.append(ver)
                     if ver not in amis_by_version_bundle2:
                         amis_by_version_bundle2[ver] = {}
                     amis_by_version_bundle2[ver][region] = ami['ImageId']
                 else:
+                    # Split the AMI name by hyphens and extract the 4th element (i.e. the version number)
                     ver = ami['Name'].split("-")[3]
+                    # Add the version number to the list of BUNDLE2 versions
                     list_of_bundle2.append(ver)
+                    # If the version number is not already a key in the dictionary, add it
                     if ver not in amis_by_version_bundle2:
                         amis_by_version_bundle2[ver] = {}
+                    # Add the AMI ID to the dictionary, with the region as the key
                     amis_by_version_bundle2[ver][region] = ami['ImageId']
 
     list_of_byol = list(dict.fromkeys(list_of_byol))
