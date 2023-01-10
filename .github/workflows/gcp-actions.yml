@@ -1,4 +1,4 @@
-name: Check GCP Versions
+name: GCP Checker
 run-name: ${{ github.actor }} is checking PAN-OS versions on GCP
 on:
   push:
