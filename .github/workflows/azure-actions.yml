@@ -1,0 +1,41 @@
+name: Azure Checker
+run-name: ${{ github.actor }} is checking PAN-OS versions on Azure
+on:
+  push:
+  schedule:
+    - cron: "0 */6 * * *"
+
+jobs:
+  panos-checker:
+    name: "panos-checker"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - uses: "actions/checkout@v3"
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Run Azure processing
+        run: |-
+          pip install azure-identity
+          pip install install azure-mgmt-compute
+          python azure-processing.py > azure.md
+        env:
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      
+      - name: Commit
+        run: |-
+          git config user.name "Jimmy"
+          git config user.email "jamesholland-uk@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}          
+          git add azure.md
+          timestamp=$(date -u)
+          git commit -m "Latest data: ${timestamp}" || exit 0
+
+      - name: Push
+        run: |-
+          git push
