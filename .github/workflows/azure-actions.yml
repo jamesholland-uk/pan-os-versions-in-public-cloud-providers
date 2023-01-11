@@ -21,6 +21,8 @@ jobs:
           pip install azure-identity
           pip install install azure-mgmt-compute
           python azure-processing.py > azure.md
+        env:
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       
       - name: Commit
         run: |-
