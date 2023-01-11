@@ -22,7 +22,7 @@ jobs:
         with:
           credentials_json: "${{ secrets.GCP_CREDS }}"
 
-      # Install gcloud, `setup-gcloud` automatically picks up authentication from `auth`
+      # Install gcloud, `setup-gcloud` automatically picks up authentication from `auth` task above
       - name: "Set up Cloud SDK"
         uses: "google-github-actions/setup-gcloud@v1"
 
