@@ -20,5 +20,4 @@ Today, this project includes lists of base PAN-OS image versions currently prese
 - Many thanks to [@lachlanjholmes](https://www.github.com/lachlanjholmes) for contributing the initial AWS code for base image versions, and an enhancement to list the AMI IDs as well
 
 ## Support
-
-This project is released under an as-is, best effort, support policy. This should be seen as community supported. There is no expectation of technical support or help in using or troubleshooting the components of the project. This projects is in no way affiliated or supported by Palo Alto Networks, its support teams, or its ASC (Authorized Support Center) partners.
+Community supported, as per the [support statement](SUPPORT.md).
