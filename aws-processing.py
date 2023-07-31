@@ -2,6 +2,7 @@ import sys
 import boto3
 import re
 from packaging import version
+import os
 
 """
 Product Codes from Palo's Doc site:
@@ -152,6 +153,42 @@ try:
     list_of_panorama = list(dict.fromkeys(list_of_panorama))
     list_of_panorama.sort(key=version.LegacyVersion)
     # print("list_of_panorama:",list_of_panorama)
+    
+    # Purge all the files under the aws/byol/ folder
+    byol_folder = 'aws/byol/'
+    for file in os.listdir(byol_folder):
+        file_path = os.path.join(byol_folder, file)
+        if os.path.isfile(file_path):
+            # print(file_path)
+            os.remove(file_path)
+
+    # Purge all the files under the aws/bundle1/ folder
+    bundle1_folder = 'aws/bundle1/'
+    for file in os.listdir(bundle1_folder):
+        file_path = os.path.join(bundle1_folder, file)
+        if os.path.isfile(file_path):
+            # print(file_path)
+            os.remove(file_path)
+
+    # Purge all the files under the aws/bundle2/ folder
+    bundle2_folder = 'aws/bundle2/'
+    for file in os.listdir(bundle2_folder):
+        file_path = os.path.join(bundle2_folder, file)
+        if os.path.isfile(file_path):
+            # print(file_path)
+            os.remove(file_path)
+
+
+    # Purge all the files under the aws/panorama/ folder
+    panorama_folder = 'aws/panorama/'
+    for file in os.listdir(panorama_folder):
+        file_path = os.path.join(panorama_folder, file)
+        if os.path.isfile(file_path):
+            # print(file_path)
+            os.remove(file_path)
+
+
+    # Create the aws.md file
     result = ""
     result += "\n# AWS\n"
     result += "\n### BYOL\n"
