@@ -200,7 +200,7 @@ try:
     result += "\n### PAYG Bundle 2\n"
     for version in list_of_bundle2:
         result += "- [" + version + "](aws/bundle2/" + version + ".md) \n"
-    result += "\n### PAYG Panorama\n"
+    result += "\n### Panorama\n"
     for version in list_of_panorama:
         result += "- [" + version + "](aws/panorama/" + version + ".md) \n"
     result += "\n"
