@@ -39,20 +39,23 @@ def ver_format(ver):
 
 
 try:
-    with open(sys.argv[1], "r") as f:
+    with open(sys.argv[1], "r") as f, open(sys.argv[2], "r") as p:
 
         # Empty places for the results
-        # v9 collected differently, for Flex only, so we can output the v9 first then the v10 (lazy hack in order to not order them after collecting them into an array)
+        # v9 and v8 collected differently, for Flex/Panorama, so we can output the v9 first then the v10 (lazy hack in order to not order them after collecting them into an array)
         result = ""
         fixed_bnd1 = []
         fixed_bnd2 = []
         fixed_byol = []
         flex_bnd1_v9 = []
-        flex_bnd2_v9 = []
-        flex_byol_v9 = []
         flex_bnd1 = []
+        flex_bnd2_v9 = []
         flex_bnd2 = []
+        flex_byol_v9 = []
         flex_byol = []
+        panorama_v8 = []
+        panorama_v9 = []
+        panorama = []
 
         for line in f:
 
@@ -101,6 +104,23 @@ try:
                 ver = line.split("-")[3].rstrip()
                 flex_byol.append(ver_format(ver))
 
+        for line in p:
+
+            # Panorama v8
+            if re.search("panorama-8\d{2,5}", line):
+                ver = line.split("-")[1].rstrip()
+                panorama_v8.append(ver_format(ver))
+
+            # Panorama v9
+            elif re.search("panorama-byol-9\d{2,5}", line):
+                ver = line.split("-")[2].rstrip()
+                panorama_v9.append(ver_format(ver))
+
+            # Panorama v10 onwards
+            elif re.search("panorama-byol-\d{3,6}", line):
+                ver = line.split("-")[2].rstrip()
+                panorama.append(ver_format(ver))
+
         # Output in markdown format
         result += "\n# GCP\n"
         result += "Note: When using the `<version>` portion of the name of the image, remove the dots. Example: `10.2.0` becomes `1020`, and then `vmseries-flex-bundle2-1020`."
@@ -131,7 +151,18 @@ try:
         for sku in fixed_bnd2:
             result += "`" + sku + "` "
         result += "\n"
+        result += "\n## Panorama (Image: `panorama-byol-<version>`)\n"
+        for sku in panorama_v8:
+            result += "`" + sku + "` "
+        for sku in panorama_v9:
+            result += "`" + sku + "` "
+        for sku in panorama:
+            result += "`" + sku + "` "
+
         print(result)
+
+except FileNotFoundError:
+    print("One or both of the files does not exist.")
 
 except Exception as e:
     print(f"Exception translating file {e!r}", file=sys.stderr)
