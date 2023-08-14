@@ -13,7 +13,7 @@ Other cloud providers may be added in future; suggestions, and contributions to 
 ## Acknowledgements
 
 - Inspiration for this project came from the great idea by [@jtschichold](https://www.github.com/jtschichold) with his [IOC tracker](https://github.com/jtschichold/panwdbl-actions)
-- Many thanks to [@lachlanjholmes](https://www.github.com/lachlanjholmes) for contributing the initial AWS code for image versions, and an enhancement to list the AMI IDs per region as well
+- Many thanks to [@lachlanjholmes](https://www.github.com/lachlanjholmes) for contributing the initial AWS code for image versions, an enhancement to list the AMI IDs per region, and adding Panorama versions and AMI IDs per region for AWS
 
 ## Status
 ![Workflow Badge](https://github.com/jamesholland-uk/pan-os-csp-versions/actions/workflows/aws-actions.yml/badge.svg)
