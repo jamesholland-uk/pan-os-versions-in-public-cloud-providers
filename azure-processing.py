@@ -42,6 +42,7 @@ flex_bnd1_v9 = []
 flex_bnd2_v9 = []
 flex_bnd3_v9 = []
 flex_byol_v9 = []
+panorama_v9 = []
 
 flex_bnd1 = []
 offer = "vmseries-flex" # Flex
@@ -83,6 +84,21 @@ for image in images:
     else:
         flex_byol.append(image.name)
 
+
+
+panorama = []
+offer = "panorama" # Panorama
+sku = "byol"
+images = compute_client.virtual_machine_images.list(location, publisher_name, offer, sku)
+for image in images:
+    if image.name[0]=="9":
+        panorama_v9.append(image.name)
+    else:
+        panorama.append(image.name)
+
+
+
+
 # Output in markdown format
 result = "\n# Azure\n"
 result += "\n## Flexible CPU (Offer: `vmseries-flex`)\n"
@@ -117,4 +133,10 @@ result += "\n### PAYG Bundle 2 (SKU: `bundle2`)\n"
 for sku in fixed_bnd2:
     result += "`" + sku + "` "
 result += "\n"
+result += "\n## Panorama (Offer: `panorama`, SKU: `byol`)\n"
+for sku in panorama_v9:
+    result += "`" + sku + "` "
+for sku in panorama:
+    result += "`" + sku + "` "
+
 print(result)
