@@ -103,7 +103,7 @@ try:
 
         # Output in markdown format
         result += "\n# GCP\n"
-        result += "Note: When using <version> within the name of the image, remove the dots. Example `10.2.0` becomes `1020`."
+        result += "Note: When using the `<version>` portion of the name of the image, remove the dots. Example: `10.2.0` becomes `1020`, and then `vmseries-flex-bundle2-1020`."
         result += "\n## Flexible CPU\n"
         result += "\n### BYOL (Image: `vmseries-flex-byol-<version>`)\n"
         for sku in flex_byol_v9:
