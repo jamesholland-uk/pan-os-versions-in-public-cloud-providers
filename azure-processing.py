@@ -85,35 +85,35 @@ for image in images:
 
 # Output in markdown format
 result = "\n# Azure\n"
-result += "\n## Flexible CPU\n"
-result += "\n### BYOL\n"
+result += "\n## Flexible CPU (Offer: `vmseries-flex`)\n"
+result += "\n### BYOL (SKU: `byol`)\n"
 for sku in flex_byol_v9:
     result += "`" + sku + "` "
 for sku in flex_byol:
     result += "`" + sku + "` "
-result += "\n### PAYG Bundle 1\n"
+result += "\n### PAYG Bundle 1 (SKU: `bundle1`)\n"
 for sku in flex_bnd1_v9:
     result += "`" + sku + "` "
 for sku in flex_bnd1:
     result += "`" + sku + "` "
-result += "\n### PAYG Bundle 2\n"
+result += "\n### PAYG Bundle 2 (SKU: `bundle2`)\n"
 for sku in flex_bnd2_v9:
     result += "`" + sku + "` "
 for sku in flex_bnd2:
     result += "`" + sku + "` "
-result += "\n### PAYG Bundle 3\n"
+result += "\n### PAYG Bundle 3 (SKU: `bundle3`)\n"
 for sku in flex_bnd3_v9:
     result += "`" + sku + "` "
 for sku in flex_bnd3:
     result += "`" + sku + "` "
-result += "\n## Fixed CPU\n"
-result += "\n### BYOL\n"
+result += "\n## Fixed CPU (Offer: `vmseries1`)\n"
+result += "\n### BYOL (SKU: `byol`)\n"
 for sku in fixed_byol:
     result += "`" + sku + "` "
-result += "\n### PAYG Bundle 1\n"
+result += "\n### PAYG Bundle 1 (SKU: `bundle1`)\n"
 for sku in fixed_bnd1:
     result += "`" + sku + "` "
-result += "\n### PAYG Bundle 2\n"
+result += "\n### PAYG Bundle 2 (SKU: `bundle2`)\n"
 for sku in fixed_bnd2:
     result += "`" + sku + "` "
 result += "\n"

@@ -103,30 +103,31 @@ try:
 
         # Output in markdown format
         result += "\n# GCP\n"
+        result += "Note: When using <version> within the name of the image, remove the dots. Example `10.2.0` becomes `1020`."
         result += "\n## Flexible CPU\n"
-        result += "\n### BYOL\n"
+        result += "\n### BYOL (Image: `vmseries-flex-byol-<version>`)\n"
         for sku in flex_byol_v9:
             result += "`" + sku + "` "
         for sku in flex_byol:
             result += "`" + sku + "` "
-        result += "\n### PAYG Bundle 1\n"
+        result += "\n### PAYG Bundle 1 (Image: `vmseries-flex-bundle1-<version>`)\n"
         for sku in flex_bnd1_v9:
             result += "`" + sku + "` "
         for sku in flex_bnd1:
             result += "`" + sku + "` "
-        result += "\n### PAYG Bundle 2\n"
+        result += "\n### PAYG Bundle 2 (Image: `vmseries-flex-bundle2-<version>`)\n"
         for sku in flex_bnd2_v9:
             result += "`" + sku + "` "
         for sku in flex_bnd2:
             result += "`" + sku + "` "
         result += "\n## Fixed CPU\n"
-        result += "\n### BYOL\n"
+        result += "\n### BYOL (Image: `vmseries-byol-<version>`)\n"
         for sku in fixed_byol:
             result += "`" + sku + "` "
-        result += "\n### PAYG Bundle 1\n"
+        result += "\n### PAYG Bundle 1 (Image: `vmseries-bundle1-<version>`)\n"
         for sku in fixed_bnd1:
             result += "`" + sku + "` "
-        result += "\n### PAYG Bundle 2\n"
+        result += "\n### PAYG Bundle 2 (Image: `vmseries-bundle2-<version>`)\n"
         for sku in fixed_bnd2:
             result += "`" + sku + "` "
         result += "\n"
