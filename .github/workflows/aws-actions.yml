@@ -1,7 +1,7 @@
 name: AWS Checker
 run-name: ${{ github.actor }} is checking PAN-OS versions on AWS
 on:
-  push:
+  workflow_dispatch:
   schedule:
     - cron: "0 */6 * * *"
 
