@@ -1,6 +1,6 @@
 
 # GCP
-Note: When using <version> within the name of the image, remove the dots. Example `10.2.0` becomes `1020`.
+Note: When using the `<version>` portion of the name of the image, remove the dots. Example: `10.2.0` becomes `1020`, and then `vmseries-flex-bundle2-1020`.
 ## Flexible CPU
 
 ### BYOL (Image: `vmseries-flex-byol-<version>`)
