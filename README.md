@@ -7,8 +7,8 @@ The initial intended use of the information provided within this project is for 
 ## The Lists
 
 - [AWS](aws.md) - including listings of AMI IDs
-- [Azure](azure.md)
-- [GCP](gcp.md)
+- [Azure](azure.md) - with Offers and SKUs
+- [GCP](gcp.md) - with image names
 
 Other cloud providers may be added in future; suggestions, and contributions to the code, are welcome.
 
