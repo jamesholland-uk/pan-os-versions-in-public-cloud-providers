@@ -1,6 +1,8 @@
 # Base PAN-OS Images on Cloud Service Providers
 
-This project exists to track the versions of base PAN-OS images which are present within major Cloud Service Providers such as [AWS](aws.md), [Azure](azure.md) and [GCP](gcp.md). The list of versions is retrieved and parsed directly from the Cloud Service Providers via their APIs. Other cloud-specific details are also made available where applicable, for example, AMI IDs per region for AWS images.
+This project exists to track the versions of base PAN-OS images which are present within major Cloud Service Providers such as [AWS](aws.md), [Azure](azure.md) and [GCP](gcp.md). The list of versions is retrieved and parsed directly from the Cloud Service Providers via their APIs. Other cloud-specific details are also made available where applicable, for example, AMI IDs per region for AWS images, Offers and SKUs for Azure, and image names for GCP.
+
+The initial intended use of the information provided within this project is for infrastructure-as-code (IaC) deployments, where the cloud-specific details such as AMIs, SKUs and image names can be used as values to deploy the required version of PAN-OS for VM-Series or Panorama. There is also benefit in the historical record (via the commits to this respository) of PAN-OS versions being added and/or removed from the Cloud Service Providers.
 
 ## The Lists
 
