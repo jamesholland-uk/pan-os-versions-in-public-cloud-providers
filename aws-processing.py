@@ -207,7 +207,8 @@ try:
     with open('aws.md','w') as file:
         file.write(result)
     file.close()
-    
+    print("aws.md file has been modified.")
+
     # Add the AMI IDs for each version to the markdown string
     for ver, amis in amis_by_version_byol.items():
         ver_str = ''
@@ -217,6 +218,7 @@ try:
         ver_str += '\n[Go back to aws.md](../../aws.md) \n'
         with open('aws/byol/' + ver + '.md', 'w') as f:
             f.write(ver_str)
+        print(f"aws/byol/{ver}.md file has been modified.")
 
     # Add the AMI IDs for each version to the markdown string
     for ver, amis in amis_by_version_bundle1.items():
@@ -227,6 +229,7 @@ try:
         ver_str += '\n[Go back to aws.md](../../aws.md) \n'
         with open('aws/bundle1/' + ver + '.md', 'w') as f:
             f.write(ver_str)
+        print(f"aws/bundle1/{ver}.md file has been modified.")
 
     # Add the AMI IDs for each version to the markdown string
     for ver, amis in amis_by_version_bundle2.items():
@@ -237,6 +240,7 @@ try:
         ver_str += '\n[Go back to aws.md](../../aws.md) \n'
         with open('aws/bundle2/' + ver + '.md', 'w') as f:
             f.write(ver_str)
+        print(f"aws/bundle2/{ver}.md file has been modified.")
 
     # Add the AMI IDs for each version to the markdown string
     for ver, amis in amis_by_version_panorama.items():
@@ -247,6 +251,7 @@ try:
         ver_str += '\n[Go back to aws.md](../../aws.md) \n'
         with open('aws/panorama/' + ver + '.md', 'w') as f:
             f.write(ver_str)
+        print(f"aws/panorama/{ver}.md file has been modified.")
 
 except Exception as e:
     print(f"Exception {e!r}", file=sys.stderr)
