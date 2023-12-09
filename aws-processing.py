@@ -1,7 +1,7 @@
 import sys
 import boto3
 import re
-from packaging import version
+import semver
 import os
 
 """
@@ -142,16 +142,16 @@ try:
                     amis_by_version_panorama[ver][region] = ami['ImageId']                    
 
     list_of_byol = list(dict.fromkeys(list_of_byol))
-    list_of_byol.sort(key=version.LegacyVersion)
+    list_of_byol.sort(key=semver.Version.parse)
     # print("list_of_byol:",list_of_byol)
     list_of_bundle1 = list(dict.fromkeys(list_of_bundle1))
-    list_of_bundle1.sort(key=version.LegacyVersion)
+    list_of_bundle1.sort(key=semver.Version.parse)
     # print("list_of_bundle1:",list_of_bundle1)
     list_of_bundle2 = list(dict.fromkeys(list_of_bundle2))
-    list_of_bundle2.sort(key=version.LegacyVersion)
+    list_of_bundle2.sort(key=semver.Version.parse)
     # print("list_of_bundle2:",list_of_bundle2)
     list_of_panorama = list(dict.fromkeys(list_of_panorama))
-    list_of_panorama.sort(key=version.LegacyVersion)
+    list_of_panorama.sort(key=semver.Version.parse)
     # print("list_of_panorama:",list_of_panorama)
     
     # Purge all the files under the aws/byol/ folder
