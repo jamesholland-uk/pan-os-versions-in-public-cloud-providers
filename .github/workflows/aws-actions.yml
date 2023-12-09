@@ -25,7 +25,7 @@ jobs:
 
       - name: Run AWS processing
         run: |-
-          pip install boto3 packaging
+          pip install boto3 semver
           python aws-processing.py
 
       - name: Commit and Push
