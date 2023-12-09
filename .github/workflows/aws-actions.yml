@@ -29,7 +29,6 @@ jobs:
           python aws-processing.py
 
       - name: Commit and Push
-        uses: "actions/checkout@v4"
         run: |-
           git config user.name "Lachlan"
           git config user.email "lachlanjholmes@users.noreply.github.com"
