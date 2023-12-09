@@ -7,6 +7,8 @@ on:
 
 jobs:
   panos-checker:
+    permissions:
+      contents: write
     name: "panos-checker"
 
     runs-on: "ubuntu-latest"
@@ -29,8 +31,6 @@ jobs:
           python aws-processing.py
 
       - name: Commit and Push
-        permissions:
-          contents: write
         run: |-
           git config user.name "Lachlan"
           git config user.email "lachlanjholmes@users.noreply.github.com"
