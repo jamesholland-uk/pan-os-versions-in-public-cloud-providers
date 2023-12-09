@@ -3,6 +3,9 @@ import boto3
 import re
 import semver
 import os
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
 """
 Product Codes from Palo's Doc site:
@@ -143,23 +146,23 @@ try:
 
     list_of_byol = list(dict.fromkeys(list_of_byol))
     list_of_byol.sort(key=semver.Version.parse)
-    # print("list_of_byol:",list_of_byol)
+    # logging.info("list_of_byol:",list_of_byol)
     list_of_bundle1 = list(dict.fromkeys(list_of_bundle1))
     list_of_bundle1.sort(key=semver.Version.parse)
-    # print("list_of_bundle1:",list_of_bundle1)
+    # logging.info("list_of_bundle1:",list_of_bundle1)
     list_of_bundle2 = list(dict.fromkeys(list_of_bundle2))
     list_of_bundle2.sort(key=semver.Version.parse)
-    # print("list_of_bundle2:",list_of_bundle2)
+    # logging.info("list_of_bundle2:",list_of_bundle2)
     list_of_panorama = list(dict.fromkeys(list_of_panorama))
     list_of_panorama.sort(key=semver.Version.parse)
-    # print("list_of_panorama:",list_of_panorama)
+    # logging.info("list_of_panorama:",list_of_panorama)
     
     # Purge all the files under the aws/byol/ folder
     byol_folder = 'aws/byol/'
     for file in os.listdir(byol_folder):
         file_path = os.path.join(byol_folder, file)
         if os.path.isfile(file_path):
-            # print(file_path)
+            # logging.info(file_path)
             os.remove(file_path)
 
     # Purge all the files under the aws/bundle1/ folder
@@ -167,7 +170,7 @@ try:
     for file in os.listdir(bundle1_folder):
         file_path = os.path.join(bundle1_folder, file)
         if os.path.isfile(file_path):
-            # print(file_path)
+            # logging.info(file_path)
             os.remove(file_path)
 
     # Purge all the files under the aws/bundle2/ folder
@@ -175,7 +178,7 @@ try:
     for file in os.listdir(bundle2_folder):
         file_path = os.path.join(bundle2_folder, file)
         if os.path.isfile(file_path):
-            # print(file_path)
+            # logging.info(file_path)
             os.remove(file_path)
 
 
@@ -184,7 +187,7 @@ try:
     for file in os.listdir(panorama_folder):
         file_path = os.path.join(panorama_folder, file)
         if os.path.isfile(file_path):
-            # print(file_path)
+            # logging.info(file_path)
             os.remove(file_path)
 
 
@@ -207,7 +210,7 @@ try:
     with open('aws.md','w') as file:
         file.write(result)
     file.close()
-    print("aws.md file has been modified.")
+    logging.info("aws.md file has been modified.")
 
     # Add the AMI IDs for each version to the markdown string
     for ver, amis in amis_by_version_byol.items():
@@ -218,7 +221,7 @@ try:
         ver_str += '\n[Go back to aws.md](../../aws.md) \n'
         with open('aws/byol/' + ver + '.md', 'w') as f:
             f.write(ver_str)
-        print(f"aws/byol/{ver}.md file has been modified.")
+        logging.info(f"aws/byol/{ver}.md file has been modified.")
 
     # Add the AMI IDs for each version to the markdown string
     for ver, amis in amis_by_version_bundle1.items():
@@ -229,7 +232,7 @@ try:
         ver_str += '\n[Go back to aws.md](../../aws.md) \n'
         with open('aws/bundle1/' + ver + '.md', 'w') as f:
             f.write(ver_str)
-        print(f"aws/bundle1/{ver}.md file has been modified.")
+        logging.info(f"aws/bundle1/{ver}.md file has been modified.")
 
     # Add the AMI IDs for each version to the markdown string
     for ver, amis in amis_by_version_bundle2.items():
@@ -240,7 +243,7 @@ try:
         ver_str += '\n[Go back to aws.md](../../aws.md) \n'
         with open('aws/bundle2/' + ver + '.md', 'w') as f:
             f.write(ver_str)
-        print(f"aws/bundle2/{ver}.md file has been modified.")
+        logging.info(f"aws/bundle2/{ver}.md file has been modified.")
 
     # Add the AMI IDs for each version to the markdown string
     for ver, amis in amis_by_version_panorama.items():
@@ -251,7 +254,7 @@ try:
         ver_str += '\n[Go back to aws.md](../../aws.md) \n'
         with open('aws/panorama/' + ver + '.md', 'w') as f:
             f.write(ver_str)
-        print(f"aws/panorama/{ver}.md file has been modified.")
+        logging.info(f"aws/panorama/{ver}.md file has been modified.")
 
 except Exception as e:
-    print(f"Exception {e!r}", file=sys.stderr)
+    logging.info(f"Exception {e!r}", file=sys.stderr)
