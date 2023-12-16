@@ -33,6 +33,7 @@
 - [11.0.0](aws/byol/11.0.0.md) 
 - [11.0.1](aws/byol/11.0.1.md) 
 - [11.0.2](aws/byol/11.0.2.md) 
+- [11.1.0](aws/byol/11.1.0.md) 
 
 ### PAYG Bundle 1
 - [9.1.12-h3](aws/bundle1/9.1.12-h3.md) 
