@@ -65,6 +65,7 @@
 - [11.0.0](aws/bundle1/11.0.0.md) 
 - [11.0.1](aws/bundle1/11.0.1.md) 
 - [11.0.2](aws/bundle1/11.0.2.md) 
+- [11.1.0](aws/bundle1/11.1.0.md) 
 
 ### PAYG Bundle 2
 - [9.1.12-h3](aws/bundle2/9.1.12-h3.md) 
@@ -97,6 +98,7 @@
 - [11.0.0](aws/bundle2/11.0.0.md) 
 - [11.0.1](aws/bundle2/11.0.1.md) 
 - [11.0.2](aws/bundle2/11.0.2.md) 
+- [11.1.0](aws/bundle2/11.1.0.md) 
 
 ### Panorama
 - [8.1.25](aws/panorama/8.1.25.md) 
