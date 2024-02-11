@@ -159,36 +159,48 @@ try:
     
     # Purge all the files under the aws/byol/ folder
     byol_folder = 'aws/byol/'
-    for file in os.listdir(byol_folder):
-        file_path = os.path.join(byol_folder, file)
-        if os.path.isfile(file_path):
-            # logging.info(file_path)
-            os.remove(file_path)
+    if not os.path.exists(byol_folder):
+        os.makedirs(byol_folder)
+    else:
+        for file in os.listdir(byol_folder):
+            file_path = os.path.join(byol_folder, file)
+            if os.path.isfile(file_path):
+                # logging.info(file_path)
+                os.remove(file_path)
 
     # Purge all the files under the aws/bundle1/ folder
     bundle1_folder = 'aws/bundle1/'
-    for file in os.listdir(bundle1_folder):
-        file_path = os.path.join(bundle1_folder, file)
-        if os.path.isfile(file_path):
-            # logging.info(file_path)
-            os.remove(file_path)
+    if not os.path.exists(bundle1_folder):
+        os.makedirs(bundle1_folder)
+    else:
+        for file in os.listdir(bundle1_folder):
+            file_path = os.path.join(bundle1_folder, file)
+            if os.path.isfile(file_path):
+                # logging.info(file_path)
+                os.remove(file_path)
 
     # Purge all the files under the aws/bundle2/ folder
     bundle2_folder = 'aws/bundle2/'
-    for file in os.listdir(bundle2_folder):
-        file_path = os.path.join(bundle2_folder, file)
-        if os.path.isfile(file_path):
-            # logging.info(file_path)
-            os.remove(file_path)
+    if not os.path.exists(bundle2_folder):
+        os.makedirs(bundle2_folder)
+    else:
+        for file in os.listdir(bundle2_folder):
+            file_path = os.path.join(bundle2_folder, file)
+            if os.path.isfile(file_path):
+                # logging.info(file_path)
+                os.remove(file_path)
 
 
     # Purge all the files under the aws/panorama/ folder
     panorama_folder = 'aws/panorama/'
-    for file in os.listdir(panorama_folder):
-        file_path = os.path.join(panorama_folder, file)
-        if os.path.isfile(file_path):
-            # logging.info(file_path)
-            os.remove(file_path)
+    if not os.path.exists(panorama_folder):
+        os.makedirs(panorama_folder)
+    else:
+        for file in os.listdir(panorama_folder):
+            file_path = os.path.join(panorama_folder, file)
+            if os.path.isfile(file_path):
+                # logging.info(file_path)
+                os.remove(file_path)
 
 
     # Create the aws.md file
