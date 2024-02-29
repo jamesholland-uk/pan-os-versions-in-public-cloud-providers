@@ -116,7 +116,6 @@
 - [10.1.9](aws/panorama/10.1.9.md) 
 - [10.1.10](aws/panorama/10.1.10.md) 
 - [10.1.12](aws/panorama/10.1.12.md) 
-- [10.2.0](aws/panorama/10.2.0.md) 
 - [10.2.3-h2](aws/panorama/10.2.3-h2.md) 
 - [10.2.3](aws/panorama/10.2.3.md) 
 - [10.2.4](aws/panorama/10.2.4.md) 
