@@ -105,7 +105,6 @@
 - [11.1.2](aws/bundle2/11.1.2.md) 
 
 ### Panorama
-- [9.1.13](aws/panorama/9.1.13.md) 
 - [9.1.16](aws/panorama/9.1.16.md) 
 - [10.1.6](aws/panorama/10.1.6.md) 
 - [10.1.8-h2](aws/panorama/10.1.8-h2.md) 
