@@ -2,10 +2,21 @@
 # AWS
 
 ### BYOL
+- [8.1.25-h1](aws/byol/8.1.25-h1.md) 
+- [9.0.16-h5](aws/byol/9.0.16-h5.md) 
+- [9.1.16-h3](aws/byol/9.1.16-h3.md) 
+- [10.0.12-h3](aws/byol/10.0.12-h3.md) 
+- [10.1.12](aws/byol/10.1.12.md) 
 
 ### PAYG Bundle 1
+- [9.1.16-h3](aws/bundle1/9.1.16-h3.md) 
+- [10.0.12-h3](aws/bundle1/10.0.12-h3.md) 
+- [10.1.12](aws/bundle1/10.1.12.md) 
 
 ### PAYG Bundle 2
+- [9.1.16-h3](aws/bundle2/9.1.16-h3.md) 
+- [10.0.12-h3](aws/bundle2/10.0.12-h3.md) 
+- [10.1.12](aws/bundle2/10.1.12.md) 
 
 ### Panorama
 - [9.1.16](aws/panorama/9.1.16.md) 
