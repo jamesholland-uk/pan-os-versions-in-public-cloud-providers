@@ -20,6 +20,7 @@
 - [10.1.10-h2](aws/byol/10.1.10-h2.md) 
 - [10.1.10](aws/byol/10.1.10.md) 
 - [10.1.12](aws/byol/10.1.12.md) 
+- [10.2.9-h1](aws/byol/10.2.9-h1.md) 
 
 ### PAYG Bundle 1
 - [9.1.13-h3](aws/bundle1/9.1.13-h3.md) 
@@ -39,6 +40,7 @@
 - [10.1.10-h2](aws/bundle1/10.1.10-h2.md) 
 - [10.1.10](aws/bundle1/10.1.10.md) 
 - [10.1.12](aws/bundle1/10.1.12.md) 
+- [10.2.9-h1](aws/bundle1/10.2.9-h1.md) 
 
 ### PAYG Bundle 2
 - [9.1.13-h3](aws/bundle2/9.1.13-h3.md) 
