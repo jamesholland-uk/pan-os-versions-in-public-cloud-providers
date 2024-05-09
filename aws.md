@@ -85,4 +85,5 @@
 - [11.0.2](aws/panorama/11.0.2.md) 
 - [11.1.0](aws/panorama/11.1.0.md) 
 - [11.1.2](aws/panorama/11.1.2.md) 
+- [11.2.0](aws/panorama/11.2.0.md) 
 
