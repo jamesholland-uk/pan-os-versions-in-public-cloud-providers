@@ -44,6 +44,7 @@
 - [11.0.4-h1](aws/bundle1/11.0.4-h1.md) 
 - [11.1.2-h3](aws/bundle1/11.1.2-h3.md) 
 - [11.1.3](aws/bundle1/11.1.3.md) 
+- [11.1.4](aws/bundle1/11.1.4.md) 
 - [11.2.0](aws/bundle1/11.2.0.md) 
 
 ### PAYG Bundle 2
