@@ -26,7 +26,6 @@
 ### PAYG Bundle 1
 - [9.1.16-h3](aws/bundle1/9.1.16-h3.md) 
 - [10.0.12-h3](aws/bundle1/10.0.12-h3.md) 
-- [10.1.7](aws/bundle1/10.1.7.md) 
 - [10.1.8-h2](aws/bundle1/10.1.8-h2.md) 
 - [10.1.8](aws/bundle1/10.1.8.md) 
 - [10.1.9-h1](aws/bundle1/10.1.9-h1.md) 
@@ -47,7 +46,6 @@
 ### PAYG Bundle 2
 - [9.1.16-h3](aws/bundle2/9.1.16-h3.md) 
 - [10.0.12-h3](aws/bundle2/10.0.12-h3.md) 
-- [10.1.7](aws/bundle2/10.1.7.md) 
 - [10.1.8-h2](aws/bundle2/10.1.8-h2.md) 
 - [10.1.8](aws/bundle2/10.1.8.md) 
 - [10.1.9-h1](aws/bundle2/10.1.9-h1.md) 
