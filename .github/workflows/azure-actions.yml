@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is checking PAN-OS versions on Azure
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "15 */6 * * *"
 
 jobs:
   panos-checker:
@@ -18,8 +18,7 @@ jobs:
 
       - name: Run Azure processing
         run: |-
-          pip install azure-identity
-          pip install install azure-mgmt-compute
+          pip install azure-identity azure-mgmt-compute
           python azure-processing.py > azure.md
         env:
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
