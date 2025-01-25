@@ -18,7 +18,6 @@
 - [10.2.10-h9](aws/byol/10.2.10-h9.md) 
 - [10.2.11-h1](aws/byol/10.2.11-h1.md) 
 - [11.0.4-h6](aws/byol/11.0.4-h6.md) 
-- [11.1.2-h3](aws/byol/11.1.2-h3.md) 
 - [11.1.4-h7](aws/byol/11.1.4-h7.md) 
 - [11.2.3-h3](aws/byol/11.2.3-h3.md) 
 
@@ -56,7 +55,6 @@
 - [10.2.10-h12](aws/bundle2/10.2.10-h12.md) 
 - [10.2.10-h9](aws/bundle2/10.2.10-h9.md) 
 - [11.0.4-h6](aws/bundle2/11.0.4-h6.md) 
-- [11.1.2-h3](aws/bundle2/11.1.2-h3.md) 
 - [11.1.4-h7](aws/bundle2/11.1.4-h7.md) 
 - [11.2.3-h3](aws/bundle2/11.2.3-h3.md) 
 
