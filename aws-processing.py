@@ -139,7 +139,7 @@ try:
                 if ami['ProductCodes'][0]['ProductCodeId'] == panorama and ami['OwnerId'] == marketplace_owner_id:
                     # Extract the version number from the AMI name
                     # Check if the version is a hotfix (i.e. ends with "-hXX")
-                    match = re.search(r'.*Panorama-AWS-(\d+.\d+.\d-h\d{1,2})-[a-z|0-9|-]{36}', ami['Name'])
+                    match = re.search(r'.*Panorama-AWS-(\d+.\d+.\d+-h\d{1,2})-[a-z|0-9|-]{36}', ami['Name'])
                     if match:
                         # Extract the version number from the match
                         ver = match.group(1)
