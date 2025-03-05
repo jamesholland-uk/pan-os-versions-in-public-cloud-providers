@@ -77,5 +77,6 @@
 - [11.1.4-h13](aws/panorama/11.1.4-h13.md) 
 - [11.1.4-h7](aws/panorama/11.1.4-h7.md) 
 - [11.2.3-h3](aws/panorama/11.2.3-h3.md) 
+- [11.2.5-h1](aws/panorama/11.2.5-h1.md) 
 - [11.2.5](aws/panorama/11.2.5.md) 
 
