@@ -68,7 +68,6 @@
 
 ### Panorama
 - [9.1.16-h3](aws/panorama/9.1.16-h3.md) 
-- [10.1.8-h2](aws/panorama/10.1.8-h2.md) 
 - [10.1.10](aws/panorama/10.1.10.md) 
 - [10.1.12](aws/panorama/10.1.12.md) 
 - [10.1.14-h6](aws/panorama/10.1.14-h6.md) 
