@@ -24,6 +24,7 @@
 - [11.2.3-h3](aws/byol/11.2.3-h3.md) 
 - [11.2.5](aws/byol/11.2.5.md) 
 - [11.2.8](aws/byol/11.2.8.md) 
+- [12.1.2](aws/byol/12.1.2.md) 
 
 ### PAYG Bundle 1
 - [9.1.16-h3](aws/bundle1/9.1.16-h3.md) 
@@ -48,6 +49,7 @@
 - [11.2.3-h3](aws/bundle1/11.2.3-h3.md) 
 - [11.2.5](aws/bundle1/11.2.5.md) 
 - [11.2.8](aws/bundle1/11.2.8.md) 
+- [12.1.2](aws/bundle1/12.1.2.md) 
 
 ### PAYG Bundle 2
 - [9.1.16-h3](aws/bundle2/9.1.16-h3.md) 
@@ -71,6 +73,7 @@
 - [11.2.3-h3](aws/bundle2/11.2.3-h3.md) 
 - [11.2.5](aws/bundle2/11.2.5.md) 
 - [11.2.8](aws/bundle2/11.2.8.md) 
+- [12.1.2](aws/bundle2/12.1.2.md) 
 
 ### Panorama
 - [9.1.16-h3](aws/panorama/9.1.16-h3.md) 
