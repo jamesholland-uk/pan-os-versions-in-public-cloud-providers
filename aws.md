@@ -69,11 +69,10 @@
 - [11.1.4-h13](aws/bundle2/11.1.4-h13.md) 
 - [11.1.4-h7](aws/bundle2/11.1.4-h7.md) 
 - [11.1.6-h10](aws/bundle2/11.1.6-h10.md) 
+- [11.1.6-h14](aws/bundle2/11.1.6-h14.md) 
 - [11.1.6-h7](aws/bundle2/11.1.6-h7.md) 
 - [11.2.3-h3](aws/bundle2/11.2.3-h3.md) 
 - [11.2.5](aws/bundle2/11.2.5.md) 
-- [11.2.8](aws/bundle2/11.2.8.md) 
-- [12.1.2](aws/bundle2/12.1.2.md) 
 
 ### Panorama
 - [9.1.16-h3](aws/panorama/9.1.16-h3.md) 
