@@ -71,7 +71,6 @@
 - [12.1.4](aws/bundle2/12.1.4.md) 
 
 ### Panorama
-- [10.1.12](aws/panorama/10.1.12.md) 
 - [10.1.14-h6](aws/panorama/10.1.14-h6.md) 
 - [10.1.14-h8](aws/panorama/10.1.14-h8.md) 
 - [10.1.14-h9](aws/panorama/10.1.14-h9.md) 
