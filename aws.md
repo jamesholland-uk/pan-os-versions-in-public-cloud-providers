@@ -3,7 +3,6 @@
 
 ### BYOL
 - [10.1.13-h1](aws/byol/10.1.13-h1.md) 
-- [10.1.14-h6](aws/byol/10.1.14-h6.md) 
 - [10.1.14-h8](aws/byol/10.1.14-h8.md) 
 - [10.1.14-h9](aws/byol/10.1.14-h9.md) 
 - [10.2.10-h12](aws/byol/10.2.10-h12.md) 
@@ -38,9 +37,7 @@
 - [12.1.7](aws/byol/12.1.7.md) 
 
 ### PAYG Bundle 1
-- [10.1.13-h1](aws/bundle1/10.1.13-h1.md) 
 - [10.1.14-h6](aws/bundle1/10.1.14-h6.md) 
-- [10.1.14-h8](aws/bundle1/10.1.14-h8.md) 
 - [10.1.14-h9](aws/bundle1/10.1.14-h9.md) 
 - [10.2.10-h12](aws/bundle1/10.2.10-h12.md) 
 - [10.2.10-h14](aws/bundle1/10.2.10-h14.md) 
