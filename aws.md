@@ -17,13 +17,11 @@
 - [11.2.5](aws/byol/11.2.5.md) 
 - [11.2.8](aws/byol/11.2.8.md) 
 - [11.2.12](aws/byol/11.2.12.md) 
-- [12.1.5](aws/byol/12.1.5.md) 
 - [12.1.7](aws/byol/12.1.7.md) 
 
 ### PAYG Bundle 1
 - [11.0.4-h6](aws/bundle1/11.0.4-h6.md) 
 - [11.1.10-h25](aws/bundle1/11.1.10-h25.md) 
-- [11.1.13-h1](aws/bundle1/11.1.13-h1.md) 
 - [11.1.13-h5](aws/bundle1/11.1.13-h5.md) 
 - [11.1.15](aws/bundle1/11.1.15.md) 
 - [11.2.5](aws/bundle1/11.2.5.md) 
