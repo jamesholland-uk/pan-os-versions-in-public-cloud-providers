@@ -53,6 +53,7 @@
 - [11.2.3-h3](aws/panorama/11.2.3-h3.md) 
 - [11.2.5-h1](aws/panorama/11.2.5-h1.md) 
 - [11.2.5](aws/panorama/11.2.5.md) 
+- [11.2.7-h18](aws/panorama/11.2.7-h18.md) 
 - [11.2.8](aws/panorama/11.2.8.md) 
 - [11.2.11](aws/panorama/11.2.11.md) 
 - [11.2.12](aws/panorama/11.2.12.md) 
