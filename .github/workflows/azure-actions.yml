@@ -18,7 +18,9 @@ jobs:
 
       - name: Run Azure processing
         run: |-
-          pip install azure-identity azure-mgmt-compute
+          # 38.3.0+ defaults to Compute API 2026-04-01, which is not yet
+          # registered for marketplace image listing (locations/publishers).
+          pip install azure-identity azure-mgmt-compute==38.2.0
           python azure-processing.py > azure.md
         env:
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
