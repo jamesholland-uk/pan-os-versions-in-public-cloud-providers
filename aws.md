@@ -36,7 +36,6 @@
 - [10.2.10-h12](aws/bundle2/10.2.10-h12.md) 
 - [10.2.10-h14](aws/bundle2/10.2.10-h14.md) 
 - [10.2.10-h9](aws/bundle2/10.2.10-h9.md) 
-- [10.2.13-h16](aws/bundle2/10.2.13-h16.md) 
 - [10.2.14](aws/bundle2/10.2.14.md) 
 - [11.0.4-h6](aws/bundle2/11.0.4-h6.md) 
 - [11.1.10-h25](aws/bundle2/11.1.10-h25.md) 
