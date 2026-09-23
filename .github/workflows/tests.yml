@@ -1,0 +1,36 @@
+name: Tests
+# Only code changes: the checkers push a data commit to main several times a
+# day, and those need no testing.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**.py"
+      - "requirements.txt"
+      - ".github/workflows/tests.yml"
+  pull_request:
+    paths:
+      - "**.py"
+      - "requirements.txt"
+      - ".github/workflows/tests.yml"
+  workflow_dispatch:
+
+jobs:
+  unittest:
+    permissions:
+      contents: read
+    name: "unittest"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - uses: "actions/checkout@v7"
+
+      - uses: "actions/setup-python@v7"
+        with:
+          python-version: "3.12"
+
+      # The tests cover the parsers and output handling only, which use the
+      # standard library, so no requirements need installing.
+      - name: Run tests
+        run: python -m unittest discover -p "test_*.py" -v
