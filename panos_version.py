@@ -122,6 +122,12 @@ def parse_azure(raw):
     A third component of one or two digits is a plain patch with no hotfix
     (11.1.15); three or more digits means the packed form.
 
+    One case cannot be recovered: a hotfix on a .0 release. 10.1.0-h3 packs
+    to 003, which Azure strips to 3, the same string as the 10.1.3 release.
+    The information is gone before it reaches us, so it is read as a plain
+    patch. No x.y.0-hN image exists on any of the three clouds (checked
+    2026-09-23); if one appears on AWS or GCP, expect Azure to be wrong.
+
     The rule is confirmed by cross-checking against AWS, which publishes the
     unambiguous dotted form of the same releases: Azure 11.1.1025 against
     AWS 11.1.10-h25, Azure 11.0.406 against AWS 11.0.4-h6, Azure 11.2.501
