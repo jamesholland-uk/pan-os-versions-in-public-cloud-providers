@@ -24,6 +24,12 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
 
+      # Pinned so the interpreter does not change under the scripts whenever
+      # GitHub moves ubuntu-latest to a new image.
+      - uses: "actions/setup-python@v7"
+        with:
+          python-version: "3.12"
+
       - name: Run Azure processing
         run: |-
           pip install -r requirements.txt
