@@ -3,6 +3,7 @@
 # Renovate could not manage.
 boto3
 azure-identity
-# 38.3.0+ defaults to Compute API 2026-04-01, which is not yet registered for
-# marketplace image listing (locations/publishers).
+# Pinned so Renovate raises each bump as a PR. 38.3.0 briefly broke
+# marketplace image listing in Aug 2026 (Compute API 2026-04-01 was not yet
+# registered), so run the Azure workflow on a Renovate branch before merging.
 azure-mgmt-compute==38.3.0
