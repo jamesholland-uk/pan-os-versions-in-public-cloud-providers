@@ -1,0 +1,32 @@
+{
+  "_comment": [
+    "End-of-life dates per PAN-OS release train, as YYYY-MM-DD.",
+    "Source: https://www.paloaltonetworks.com/services/support/end-of-life-announcements/end-of-life-summary",
+    "Captured 2026-09-22.",
+    "'standard' is the Standard Support end-of-life date; 'extended' is the",
+    "Extended Support date where one is offered, otherwise null. A train past",
+    "its standard date is marked EOL in the listings, noting the extended date",
+    "if that has not passed yet. Conditions attached to extended support are on",
+    "the source page and are not reproduced here.",
+    "A train absent from this file, or with a null 'standard' date, is treated",
+    "as unknown and is never marked EOL - an unknown date must not be",
+    "presented as 'still supported'.",
+    "Review this roughly twice a year, or whenever a new train ships."
+  ],
+  "trains": {
+    "7.0": { "standard": "2017-12-04", "extended": null },
+    "7.1": { "standard": "2020-06-30", "extended": null },
+    "8.0": { "standard": "2019-10-31", "extended": null },
+    "8.1": { "standard": "2022-03-01", "extended": null },
+    "9.0": { "standard": "2022-03-01", "extended": null },
+    "9.1": { "standard": "2024-06-30", "extended": null },
+    "10.0": { "standard": "2022-07-16", "extended": null },
+    "10.1": { "standard": "2024-12-01", "extended": "2026-03-31" },
+    "10.2": { "standard": "2025-08-27", "extended": "2027-03-31" },
+    "11.0": { "standard": "2024-11-17", "extended": null },
+    "11.1": { "standard": "2027-05-03", "extended": "2027-08-31" },
+    "11.2": { "standard": "2027-05-02", "extended": "2027-08-31" },
+    "12.1": { "standard": "2028-08-28", "extended": "2029-08-28" },
+    "12.2": { "standard": "2029-07-30", "extended": "2030-07-30" }
+  }
+}

@@ -1,0 +1,8 @@
+# Pinned here rather than inline in the workflows so that Renovate can see
+# them. The one dependency that has actually broken this project was the one
+# Renovate could not manage.
+boto3
+azure-identity
+# 38.3.0+ defaults to Compute API 2026-04-01, which is not yet registered for
+# marketplace image listing (locations/publishers).
+azure-mgmt-compute==38.2.0

@@ -1,2 +1,8 @@
 .DS_Store
 venv/*
+.venv/
+__pycache__/
+# Intermediate gcloud output, consumed by gcp-processing.py and not published.
+gcp-list.txt
+gcp-rama-list.txt
+gcp-airs-list.txt
