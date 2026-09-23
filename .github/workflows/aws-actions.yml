@@ -2,6 +2,15 @@ name: AWS Checker
 run-name: ${{ github.actor }} is checking PAN-OS versions on AWS
 on:
   workflow_dispatch:
+  # A dry run on pull requests: the full job against the live APIs, minus
+  # the commit, so a dependency or code change is proven before merge and
+  # Renovate's branches are never written to.
+  pull_request:
+    paths:
+      - "aws-processing.py"
+      - "panos_*.py"
+      - "requirements.txt"
+      - ".github/workflows/aws-actions.yml"
   schedule:
     - cron: "0 */6 * * *"
 
@@ -11,22 +20,29 @@ on:
 # one already waiting. Runs take a minute or two against 15-minute gaps, so
 # on the schedule this does not happen; a cancelled run is simply retried at
 # its next slot. Dispatching all three by hand at once will cancel one.
+# Pull request runs commit nothing, so they get a group of their own and
+# never hold up or cancel a scheduled run; a newer push supersedes them.
 concurrency:
-  group: data-commit
-  cancel-in-progress: false
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}-{1}', github.workflow, github.ref) || 'data-commit' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   panos-checker:
     permissions:
       contents: write
     name: "panos-checker"
+    # Pull requests from forks get no secrets, so there is nothing to run.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
 
     runs-on: "ubuntu-latest"
 
     steps:
       - uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
+        # The branch name, so a queued run builds on the newest push rather
+        # than the commit it was triggered from. On a pull request the ref is
+        # N/merge, not a branch, so the default merge checkout is used.
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.event_name != 'pull_request' && github.ref_name || '' }}
 
       # Pinned so the interpreter does not change under the scripts whenever
       # GitHub moves ubuntu-latest to a new image.
@@ -46,7 +62,12 @@ jobs:
           pip install -r requirements.txt
           python aws-processing.py
 
+      - name: Show what would be committed
+        if: github.event_name == 'pull_request'
+        run: git status --short aws.md aws/ data/
+
       - name: Commit and Push
+        if: github.event_name != 'pull_request'
         run: |-
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
