@@ -34,5 +34,11 @@ class TestCollectPanorama(unittest.TestCase):
         self.assertEqual(len(skipped), 1)
 
 
+class TestRenderMarkdown(unittest.TestCase):
+    def test_empty_panorama_section_says_none_published(self):
+        text = gcp.render_markdown([], [], [])
+        self.assertIn("## Panorama\n\nNone published.\n", text)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -190,7 +190,8 @@ def render_markdown(vmseries, panorama, airs):
     out += version_table(rows) if rows else ["\nNone published.\n"]
 
     out.append("\n## Panorama\n")
-    out += version_table(section(panorama, None, "byol"))
+    rows = section(panorama, None, "byol")
+    out += version_table(rows) if rows else ["\nNone published.\n"]
     return "".join(out)
 
 
