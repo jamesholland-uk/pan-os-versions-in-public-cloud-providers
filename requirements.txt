@@ -1,9 +1,10 @@
 # Pinned here rather than inline in the workflows so that Renovate can see
 # them. The one dependency that has actually broken this project was the one
-# Renovate could not manage.
-boto3
-azure-identity
-# Pinned so Renovate raises each bump as a PR. 38.3.0 briefly broke
-# marketplace image listing in Aug 2026 (Compute API 2026-04-01 was not yet
-# registered), so run the Azure workflow on a Renovate branch before merging.
+# Renovate could not manage. Every dependency is pinned so that Renovate raises
+# each bump as a PR and a run never picks up a new release unannounced.
+boto3==1.43.100
+azure-identity==1.25.3
+# 38.3.0 briefly broke marketplace image listing in Aug 2026 (Compute API
+# 2026-04-01 was not yet registered), so run the Azure workflow on a Renovate
+# branch before merging.
 azure-mgmt-compute==38.3.0

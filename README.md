@@ -25,21 +25,42 @@ For automation, the same data as JSON:
 
 Each record carries both forms of the version: `version` is the canonical PAN-OS string a human reads (`11.2.7-h13`), and the provider fields carry the raw identifier the cloud actually expects (Azure `11.2.713`, GCP `vmseries-flex-byol-11271h13`, AWS an AMI ID per region). Use the canonical form to decide, the raw form to deploy.
 
+Two real records from `data/versions.json`, one AWS and one Azure (the AWS `amis` map is cut to two regions; the real one lists every region the image is in):
+
 ```json
-{
-  "version": "12.1.9",
-  "major": 12, "minor": 1, "patch": 9, "hotfix": null,
-  "train": "12.1",
-  "product": "vm-series",
-  "licence": "bundle3",
-  "eol": null,
-  "eol_date": null,
-  "product_code": "1rfiaqne1ae8ivks1wh0xyx4g",
-  "amis": { "eu-west-1": "ami-0...", "us-east-1": "ami-0..." }
-}
+[
+  {
+    "provider": "aws",
+    "version": "11.2.7-h18",
+    "major": 11, "minor": 2, "patch": 7, "hotfix": 18,
+    "train": "11.2",
+    "product": "vm-series",
+    "licence": "byol",
+    "eol": false,
+    "eol_date": "2027-05-02",
+    "eol_extended_date": "2027-08-31",
+    "product_code": "6njl1pau431dv1qxipg63mvah",
+    "amis": { "eu-west-1": "ami-01d2bf894ea94ad4a", "us-east-1": "ami-08c1e7c452f866f48" }
+  },
+  {
+    "provider": "azure",
+    "version": "11.2.7-h13",
+    "major": 11, "minor": 2, "patch": 7, "hotfix": 13,
+    "train": "11.2",
+    "product": "vm-series",
+    "licence": "byol",
+    "eol": false,
+    "eol_date": "2027-05-02",
+    "eol_extended_date": "2027-08-31",
+    "cpu": "flex",
+    "offer": "vmseries-flex",
+    "sku": "byol",
+    "image_version": "11.2.713"
+  }
+]
 ```
 
-`eol` is `true` past the published end-of-life date for that release train, `false` before it, and `null` when no date is recorded in [`eol.json`](eol.json). An unknown date is never reported as supported, so filter on `eol != true` rather than `eol == false`.
+`eol` is `true` past the end of standard support for that release train, `false` before it, and `null` when no date is recorded in [`eol.json`](eol.json). `eol_date` is that standard-support date, and `eol_extended_date` is the end of extended support where Palo Alto Networks offers it, otherwise `null`. An unknown date is never reported as supported, so filter on `eol != true` rather than `eol == false`.
 
 ## Using the JSON from Terraform
 
