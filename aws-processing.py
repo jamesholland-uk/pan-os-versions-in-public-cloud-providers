@@ -132,6 +132,7 @@ def collect(session, regions, skipped, unknown_codes):
     regions that could not be reached."""
     found = {}
     versions = {}
+    created = {}
     unreachable = []
 
     for region in regions:
@@ -176,6 +177,11 @@ def collect(session, regions, skipped, unknown_codes):
                 continue
             product, licence = PRODUCT_CODES[code]
             key = (product, licence, str(version))
+            # Marketplace occasionally republishes a version. The newest AMI
+            # wins, so the choice never depends on the order the API returns.
+            if ami["CreationDate"] < created.get((key, region), ""):
+                continue
+            created[(key, region)] = ami["CreationDate"]
             versions[key] = version
             found.setdefault(key, {})[region] = ami["ImageId"]
 

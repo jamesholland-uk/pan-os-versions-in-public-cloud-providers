@@ -32,11 +32,11 @@ VMSERIES_FAMILIES = [
 # Panorama has accumulated three naming styles over the years:
 #   panorama-811            the original
 #   panorama-byol-1000      the byol-infix era
-#   panorama-gcp-11-2-6     the current dashed form
+#   panorama-gcp-11-2-6     the current dashed form, hotfix as -h18
 # The first two pack the version the same way VM-Series does; the third
 # spells it out, so it is handled separately.
 PANORAMA_PACKED = re.compile(r"^panorama-(?:byol-)?(\d.*)$")
-PANORAMA_DASHED = re.compile(r"^panorama-gcp-(\d+)-(\d+)-(\d+)$")
+PANORAMA_DASHED = re.compile(r"^panorama-gcp-(\d+)-(\d+)-(\d+)(?:-h(\d+))?$")
 
 # Prisma AIRS (AI Runtime Security) has two styles, mirroring VM-Series:
 #   ai-runtime-security-byol-1127h13     packed, as VM-Series
@@ -83,20 +83,22 @@ def collect_vmseries(names, eol_table, skipped):
 def collect_panorama(names, eol_table, skipped):
     records = []
     for name in names:
-        dashed = PANORAMA_DASHED.match(name)
-        if dashed:
-            major, minor, patch = dashed.groups()
-            version = parse_gcp(f"{major}{minor}{patch}")
-        else:
+        try:
+            dashed = PANORAMA_DASHED.match(name)
             packed = PANORAMA_PACKED.match(name)
-            if not packed:
+            if dashed:
+                major, minor, patch, hotfix = dashed.groups()
+                version = parse_dotted(
+                    f"{major}.{minor}.{patch}" + (f"-h{hotfix}" if hotfix else "")
+                )
+            elif packed:
+                version = parse_gcp(packed.group(1))
+            else:
                 skipped.append((name, "unrecognised Panorama image name"))
                 continue
-            try:
-                version = parse_gcp(packed.group(1))
-            except ParseError as error:
-                skipped.append((name, str(error)))
-                continue
+        except ParseError as error:
+            skipped.append((name, str(error)))
+            continue
         records.append(
             panos_output.make_record(
                 version, "panorama", "byol", eol_table, cpu=None, image_name=name
@@ -188,7 +190,8 @@ def render_markdown(vmseries, panorama, airs):
     out += version_table(rows) if rows else ["\nNone published.\n"]
 
     out.append("\n## Panorama\n")
-    out += version_table(section(panorama, None, "byol"))
+    rows = section(panorama, None, "byol")
+    out += version_table(rows) if rows else ["\nNone published.\n"]
     return "".join(out)
 
 
