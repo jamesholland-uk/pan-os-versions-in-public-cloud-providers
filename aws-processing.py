@@ -1,288 +1,294 @@
-import sys
-import boto3
-import re
-import semver
-import os
+#! /usr/bin/env python3
+
+"""Query AWS for PAN-OS AMIs and write aws.md, aws/<licence>/<version>.md and data/aws.json."""
+
 import logging
+import os
+import re
+import sys
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
+import boto3
+from botocore.config import Config
+from botocore.exceptions import BotoCoreError, ClientError
 
-"""
-Product Codes from Palo's Doc site:
-https://docs.paloaltonetworks.com/vm-series/11-0/vm-series-deployment/set-up-the-vm-series-firewall-on-aws/deploy-the-vm-series-firewall-on-aws/obtain-the-ami/get-amazon-machine-image-ids
-"""
-byol = '6njl1pau431dv1qxipg63mvah'
-bundle1 = 'e9yfvyj3uag5uo5j2hjikv74n'
-bundle2 = 'hd44w1chf26uv4p52cdynb2o'
-panorama = 'eclz7j04vu9lf8ont8ta3n17o'
-marketplace_owner_id = '679593333241'
+import panos_output
+from panos_version import ParseError, parse_dotted
 
-# Create a boto3 session
-session = boto3.Session()
+logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
-# Get a list of all regions
-client = boto3.client('ec2')
-regions = [region['RegionName'] for region in client.describe_regions()['Regions']]
+# Product codes from the Palo Alto documentation:
+# https://docs.paloaltonetworks.com/vm-series/11-0/vm-series-deployment/set-up-the-vm-series-firewall-on-aws/deploy-the-vm-series-firewall-on-aws/obtain-the-ami/get-amazon-machine-image-ids
+PRODUCT_CODES = {
+    "6njl1pau431dv1qxipg63mvah": ("vm-series", "byol"),
+    "e9yfvyj3uag5uo5j2hjikv74n": ("vm-series", "bundle1"),
+    "hd44w1chf26uv4p52cdynb2o": ("vm-series", "bundle2"),
+    # "VM-Series - Advanced security subscriptions (PAYG)" - the AWS
+    # equivalent of the bundle3 SKU already listed for Azure and GCP.
+    "1rfiaqne1ae8ivks1wh0xyx4g": ("vm-series", "bundle3"),
+    # Prisma AIRS (AI Runtime Security): the same PAN-OS image licensed as a
+    # superset of VM-Series, still sold as its own marketplace listing.
+    "b261y39exndwe1ltro1tqpeog": ("airs", "byol"),
+    "eclz7j04vu9lf8ont8ta3n17o": ("panorama", "byol"),
+}
+MARKETPLACE_OWNER_ID = "679593333241"
+NAME_FILTERS = [
+    "PA-VM-AWS*",
+    "Panorama-AWS*",
+    # Older AIRS AMIs only; newer ones are named PA-VM-AWS-* like VM-Series,
+    # and the product code is what tells them apart.
+    "AI-Runtime-Security-AWS*",
+    "PA-AI-Runtime-Security-AWS*",
+]
 
-try:
-    # Initialise an empty list to store version numbers based on licensing model
-    list_of_byol = []
-    list_of_bundle1 = []
-    list_of_bundle2 = []
-    list_of_panorama = []
-    # Initialise an empty dictionaries to store AMI IDs based on licensing model
-    amis_by_version_byol = {}
-    amis_by_version_bundle1 = {}
-    amis_by_version_bundle2 = {}
-    amis_by_version_panorama = {}
+# AMI names are <prefix>-<version>-<suffix>, where the suffix is either a UUID
+# per listing or a marketplace product token:
+#   PA-VM-AWS-11.1.10-h25-7064e142-2859-40a4-ab62-8b0996b842e9
+#   PA-VM-AWS-11.1.15-prod-slv6ybyrjrxnm
+#   Panorama-AWS-11.1.4-h13-f264c750-1102-41c9-a14d-b54ea51780e4
+#   PA-AI-Runtime-Security-AWS-11.2.4-h1-prod-v7k5pwjb72ea2
+AMI_NAME = re.compile(
+    r"^(?:PA-VM-AWS|Panorama-AWS|(?:PA-)?AI-Runtime-Security-AWS)"
+    r"-(\d+\.\d+\.\d+(?:-h\d+)?)(?:-|$)"
+)
+
+# Directory under aws/ for each (product, licence). Kept as-is so that links
+# published over the last four years keep working.
+DIRECTORIES = {
+    ("vm-series", "byol"): "byol",
+    ("vm-series", "bundle1"): "bundle1",
+    ("vm-series", "bundle2"): "bundle2",
+    ("vm-series", "bundle3"): "bundle3",
+    ("airs", "byol"): "airs",
+    ("panorama", "byol"): "panorama",
+}
+SECTIONS = [
+    ("BYOL", ("vm-series", "byol")),
+    ("PAYG Bundle 1", ("vm-series", "bundle1")),
+    ("PAYG Bundle 2", ("vm-series", "bundle2")),
+    ("PAYG Advanced Security (Bundle 3)", ("vm-series", "bundle3")),
+    ("Prisma AIRS (AI Runtime Security) BYOL", ("airs", "byol")),
+    ("Panorama", ("panorama", "byol")),
+]
+
+
+# A region the account cannot reach should cost one fast failure, not sixty
+# seconds of connect timeouts and retries.
+REGION_CONFIG = Config(
+    retries={"max_attempts": 2, "mode": "standard"},
+    connect_timeout=5,
+    read_timeout=20,
+)
+
+
+def all_regions(session):
+    """Return (queryable, not_opted_in) region names.
+
+    describe_regions() defaults to the account's *enabled* regions, which is
+    why this project published only the 17 default-on regions for years.
+    AllRegions=True lists everything AWS offers and tags each with an opt-in
+    status, so the ones the account genuinely cannot query are named in the
+    output instead of being invisibly absent. If the account opts in to more
+    later, coverage widens with no change here.
+    """
+    client = session.client("ec2", region_name="us-east-1", config=REGION_CONFIG)
+    queryable, not_opted_in = [], []
+    for region in client.describe_regions(AllRegions=True)["Regions"]:
+        target = (
+            not_opted_in if region["OptInStatus"] == "not-opted-in" else queryable
+        )
+        target.append(region["RegionName"])
+    return sorted(queryable), sorted(not_opted_in)
+
+
+def collect(session, regions, skipped, unknown_codes):
+    """Return {(product, licence, version_str): {region: ami_id}} and the
+    regions that could not be reached."""
+    found = {}
+    versions = {}
+    unreachable = []
 
     for region in regions:
-        # Create an EC2 client for the region
-        ec2 = session.client('ec2', region_name=region)
+        ec2 = session.client("ec2", region_name=region, config=REGION_CONFIG)
+        try:
+            images = []
+            for name_filter in NAME_FILTERS:
+                images += ec2.describe_images(
+                    Filters=[{"Name": "name", "Values": [name_filter]}]
+                )["Images"]
+        except (ClientError, BotoCoreError) as error:
+            unreachable.append(region)
+            logging.warning("%s unreachable: %s", region, type(error).__name__)
+            continue
 
-        ami_images = ec2.describe_images(Filters=[{'Name': 'name', 'Values': ['PA-VM-AWS*']}])
+        for ami in images:
+            if ami["OwnerId"] != MARKETPLACE_OWNER_ID:
+                continue
+            product_codes = ami.get("ProductCodes")
+            if not product_codes:
+                continue
+            code = product_codes[0]["ProductCodeId"]
+            if code not in PRODUCT_CODES:
+                # A marketplace listing this project does not track. Recorded
+                # so that a new listing shows up in the run log rather than
+                # quietly going unpublished, which is how AWS Bundle 3 was
+                # missed for years.
+                unknown_codes.setdefault(code, ami["Name"])
+                continue
+            match = AMI_NAME.match(ami["Name"])
+            if not match:
+                skipped.append((f"{region}/{ami['Name']}", "unrecognised AMI name"))
+                continue
+            try:
+                version = parse_dotted(match.group(1))
+            except ParseError as error:
+                skipped.append((f"{region}/{ami['Name']}", str(error)))
+                continue
+            product, licence = PRODUCT_CODES[code]
+            key = (product, licence, str(version))
+            versions[key] = version
+            found.setdefault(key, {})[region] = ami["ImageId"]
 
-        # Iterate through each AMI image
-        for ami in ami_images['Images']:
-            # Check if 'ProductCodes' exists and is not empty
-            if 'ProductCodes' in ami and ami['ProductCodes']:
-                # Check if AMI is BYOL and owned by the marketplace owner
-                if ami['ProductCodes'][0]['ProductCodeId'] == byol and ami['OwnerId'] == marketplace_owner_id:
-                    # Extract the version number from the AMI name
-                    # Check if the version is a hotfix (i.e. ends with "-hXX")
-                    match = re.search(r'.*PA-VM-AWS-(\d+.\d+.\d+-h\d{1,2})-', ami['Name'])
-                    if match:
-                        # Extract the version number from the match
-                        ver = match.group(1)
-                        list_of_byol.append(ver)
-                        if ver not in amis_by_version_byol:
-                            amis_by_version_byol[ver] = {}
-                        amis_by_version_byol[ver][region] = ami['ImageId']
-                    else:
-                        # Split the AMI name by hyphens and extract the 4th element (i.e. the version number)
-                        ver = ami['Name'].split("-")[3]
-                        # Add the version number to the list of BYOL versions
-                        list_of_byol.append(ver)
-                        # If the version number is not already a key in the dictionary, add it
-                        if ver not in amis_by_version_byol:
-                            amis_by_version_byol[ver] = {}
-                        # Add the AMI ID to the dictionary, with the region as the key
-                        amis_by_version_byol[ver][region] = ami['ImageId']
-            else:
-                print(f"Skipping BYOL AMI {ami.get('ImageId', 'Unknown')} ({ami.get('Name', 'Unknown')}) in {region} due to missing ProductCode")
-
-        # Iterate through each AMI image
-        for ami in ami_images['Images']:
-            # Check if 'ProductCodes' exists and is not empty
-            if 'ProductCodes' in ami and ami['ProductCodes']:
-                # Check if AMI is BUNDLE1 and owned by the marketplace owner
-                if ami['ProductCodes'][0]['ProductCodeId'] == bundle1 and ami['OwnerId'] == marketplace_owner_id:
-                    # Extract the version number from the AMI name
-                    # Check if the version is a hotfix (i.e. ends with "-hXX")
-                    match = re.search(r'.*PA-VM-AWS-(\d+.\d+.\d+-h\d{1,2}|)-', ami['Name'])
-                    if match:
-                        # Extract the version number from the match
-                        ver = match.group(1)
-                        list_of_bundle1.append(ver)
-                        if ver not in amis_by_version_bundle1:
-                            amis_by_version_bundle1[ver] = {}
-                        amis_by_version_bundle1[ver][region] = ami['ImageId']
-                    else:
-                        # Split the AMI name by hyphens and extract the 4th element (i.e. the version number)
-                        ver = ami['Name'].split("-")[3]
-                        # Add the version number to the list of BUNDLE1 versions
-                        list_of_bundle1.append(ver)
-                        # If the version number is not already a key in the dictionary, add it
-                        if ver not in amis_by_version_bundle1:
-                            amis_by_version_bundle1[ver] = {}
-                        # Add the AMI ID to the dictionary, with the region as the key
-                        amis_by_version_bundle1[ver][region] = ami['ImageId']
-            else:
-                print(f"Skipping Bundle1 AMI {ami.get('ImageId', 'Unknown')} ({ami.get('Name', 'Unknown')}) in {region} due to missing ProductCode")
-
-        # Iterate through each AMI image
-        for ami in ami_images['Images']:
-            # Check if 'ProductCodes' exists and is not empty
-            if 'ProductCodes' in ami and ami['ProductCodes']:
-                # Check if AMI is BUNDLE2 and owned by the marketplace owner
-                if ami['ProductCodes'][0]['ProductCodeId'] == bundle2 and ami['OwnerId'] == marketplace_owner_id:
-                    # Extract the version number from the AMI name
-                    # Check if the version is a hotfix (i.e. ends with "-hXX")
-                    match = re.search(r'.*PA-VM-AWS-(\d+.\d+.\d+-h\d{1,2})-', ami['Name'])
-                    if match:
-                        # Extract the version number from the match
-                        ver = match.group(1)
-                        list_of_bundle2.append(ver)
-                        if ver not in amis_by_version_bundle2:
-                            amis_by_version_bundle2[ver] = {}
-                        amis_by_version_bundle2[ver][region] = ami['ImageId']
-                    else:
-                        # Split the AMI name by hyphens and extract the 4th element (i.e. the version number)
-                        ver = ami['Name'].split("-")[3]
-                        # Add the version number to the list of BUNDLE2 versions
-                        list_of_bundle2.append(ver)
-                        # If the version number is not already a key in the dictionary, add it
-                        if ver not in amis_by_version_bundle2:
-                            amis_by_version_bundle2[ver] = {}
-                        # Add the AMI ID to the dictionary, with the region as the key
-                        amis_by_version_bundle2[ver][region] = ami['ImageId']
-            else:
-                print(f"Skipping Bundle2 AMI {ami.get('ImageId', 'Unknown')} ({ami.get('Name', 'Unknown')}) in {region} due to missing ProductCode")
-
-        ami_images = ec2.describe_images(Filters=[{'Name': 'name', 'Values': ['Panorama-AWS*']}])
-
-        # Iterate through each AMI image
-        for ami in ami_images['Images']:
-            # Check if 'ProductCodes' exists and is not empty
-            if 'ProductCodes' in ami and ami['ProductCodes']:
-                # Check if AMI is BYOL and owned by the marketplace owner
-                if ami['ProductCodes'][0]['ProductCodeId'] == panorama and ami['OwnerId'] == marketplace_owner_id:
-                    # Extract the version number from the AMI name
-                    # Check if the version is a hotfix (i.e. ends with "-hXX")
-                    match = re.search(r'.*Panorama-AWS-(\d+.\d+.\d+-h\d{1,2})-[a-z|0-9|-]{36}', ami['Name'])
-                    if match:
-                        # Extract the version number from the match
-                        ver = match.group(1)
-                        list_of_panorama.append(ver)
-                        if ver not in amis_by_version_panorama:
-                            amis_by_version_panorama[ver] = {}
-                        amis_by_version_panorama[ver][region] = ami['ImageId']
-                    else:
-                        # Split the AMI name by hyphens and extract the 3th element (i.e. the version number)
-                        ver = ami['Name'].split("-")[2]
-                        # Add the version number to the list of BYOL versions
-                        list_of_panorama.append(ver)
-                        # If the version number is not already a key in the dictionary, add it
-                        if ver not in amis_by_version_panorama:
-                            amis_by_version_panorama[ver] = {}
-                        # Add the AMI ID to the dictionary, with the region as the key
-                        amis_by_version_panorama[ver][region] = ami['ImageId']
-            else:
-                print(f"Skipping Panorama AMI {ami.get('ImageId', 'Unknown')} ({ami.get('Name', 'Unknown')}) in {region} due to missing ProductCode")
-
-    list_of_byol = list(dict.fromkeys(list_of_byol))
-    list_of_byol.sort(key=semver.Version.parse)
-    # logging.info("list_of_byol:",list_of_byol)
-    list_of_bundle1 = list(dict.fromkeys(list_of_bundle1))
-    list_of_bundle1.sort(key=semver.Version.parse)
-    # logging.info("list_of_bundle1:",list_of_bundle1)
-    list_of_bundle2 = list(dict.fromkeys(list_of_bundle2))
-    list_of_bundle2.sort(key=semver.Version.parse)
-    # logging.info("list_of_bundle2:",list_of_bundle2)
-    list_of_panorama = list(dict.fromkeys(list_of_panorama))
-    list_of_panorama.sort(key=semver.Version.parse)
-    # logging.info("list_of_panorama:",list_of_panorama)
-    
-    # Purge all the files under the aws/byol/ folder
-    byol_folder = 'aws/byol/'
-    if not os.path.exists(byol_folder):
-        os.makedirs(byol_folder)
-    else:
-        for file in os.listdir(byol_folder):
-            file_path = os.path.join(byol_folder, file)
-            if os.path.isfile(file_path):
-                # logging.info(file_path)
-                os.remove(file_path)
-
-    # Purge all the files under the aws/bundle1/ folder
-    bundle1_folder = 'aws/bundle1/'
-    if not os.path.exists(bundle1_folder):
-        os.makedirs(bundle1_folder)
-    else:
-        for file in os.listdir(bundle1_folder):
-            file_path = os.path.join(bundle1_folder, file)
-            if os.path.isfile(file_path):
-                # logging.info(file_path)
-                os.remove(file_path)
-
-    # Purge all the files under the aws/bundle2/ folder
-    bundle2_folder = 'aws/bundle2/'
-    if not os.path.exists(bundle2_folder):
-        os.makedirs(bundle2_folder)
-    else:
-        for file in os.listdir(bundle2_folder):
-            file_path = os.path.join(bundle2_folder, file)
-            if os.path.isfile(file_path):
-                # logging.info(file_path)
-                os.remove(file_path)
+    return found, versions, unreachable
 
 
-    # Purge all the files under the aws/panorama/ folder
-    panorama_folder = 'aws/panorama/'
-    if not os.path.exists(panorama_folder):
-        os.makedirs(panorama_folder)
-    else:
-        for file in os.listdir(panorama_folder):
-            file_path = os.path.join(panorama_folder, file)
-            if os.path.isfile(file_path):
-                # logging.info(file_path)
-                os.remove(file_path)
+def build_records(found, versions, eol_table):
+    records = []
+    for key, amis in found.items():
+        product, licence, _ = key
+        records.append(
+            panos_output.make_record(
+                versions[key],
+                product,
+                licence,
+                eol_table,
+                product_code=next(
+                    code for code, value in PRODUCT_CODES.items()
+                    if value == (product, licence)
+                ),
+                amis=dict(sorted(amis.items())),
+            )
+        )
+    records.sort(
+        key=lambda r: (
+            r["product"], r["licence"],
+            r["major"], r["minor"], r["patch"], r["hotfix"] or 0,
+        )
+    )
+    return records
 
 
-    # Create the aws.md file
-    result = ""
-    result += "\n# AWS\n"
-    result += "\n### BYOL\n"
-    for version in list_of_byol:
-        result += "- [" + version + "](aws/byol/" + version + ".md) \n"
-    result += "\n### PAYG Bundle 1\n"
-    for version in list_of_bundle1:
-        result += "- [" + version + "](aws/bundle1/" + version + ".md) \n"
-    result += "\n### PAYG Bundle 2\n"
-    for version in list_of_bundle2:
-        result += "- [" + version + "](aws/bundle2/" + version + ".md) \n"
-    result += "\n### Panorama\n"
-    for version in list_of_panorama:
-        result += "- [" + version + "](aws/panorama/" + version + ".md) \n"
-    result += "\n"
-    with open('aws.md','w') as file:
-        file.write(result)
-    file.close()
-    logging.info("aws.md file has been modified.")
+def render_index(records, covered, uncovered):
+    out = ["\n# AWS\n"]
+    out.append(
+        f"\nAMI IDs are region-specific. Each version below links to its IDs "
+        f"across the {len(covered)} regions this project covers.\n"
+    )
+    out.append(panos_output.EOL_LEGEND)
+    for heading, key in SECTIONS:
+        directory = DIRECTORIES[key]
+        out.append(f"\n### {heading}\n\n")
+        rows = [r for r in records if (r["product"], r["licence"]) == key]
+        if not rows:
+            out.append("None published.\n")
+            continue
+        for record in rows:
+            out.append(
+                f"- [{panos_output.markdown_label(record)}]"
+                f"(aws/{directory}/{record['version']}.md) "
+                f"- {len(record['amis'])} regions\n"
+            )
+    if uncovered:
+        out.append("\n## Regions not covered\n")
+        out.append(
+            "\nThe AWS account behind this project has not opted in to the "
+            "regions below, so no AMI IDs are collected for them. This is a "
+            "limit of the account doing the querying, not a statement that "
+            "Palo Alto Networks does not publish there.\n\n"
+        )
+        out.append("".join(f"- `{region}`\n" for region in uncovered))
+    out.append("\n")
+    return "".join(out)
 
-    # Add the AMI IDs for each version to the markdown string
-    for ver, amis in amis_by_version_byol.items():
-        ver_str = ''
-        ver_str += '\n # '+ ver + '\n'
-        for region, ami in amis.items():
-            ver_str += '- ' + region + ': ' + ami + '\n'
-        ver_str += '\n[Go back to aws.md](../../aws.md) \n'
-        with open('aws/byol/' + ver + '.md', 'w') as f:
-            f.write(ver_str)
-        logging.info(f"aws/byol/{ver}.md file has been modified.")
 
-    # Add the AMI IDs for each version to the markdown string
-    for ver, amis in amis_by_version_bundle1.items():
-        ver_str = ''
-        ver_str += '\n # '+ ver + '\n'
-        for region, ami in amis.items():
-            ver_str += '- ' + region + ': ' + ami + '\n'
-        ver_str += '\n[Go back to aws.md](../../aws.md) \n'
-        with open('aws/bundle1/' + ver + '.md', 'w') as f:
-            f.write(ver_str)
-        logging.info(f"aws/bundle1/{ver}.md file has been modified.")
+def render_version_page(record):
+    out = [f"\n # {record['version']}\n"]
+    for region, ami in record["amis"].items():
+        out.append(f"- {region}: {ami}\n")
+    out.append("\n[Go back to aws.md](../../aws.md) \n")
+    return "".join(out)
 
-    # Add the AMI IDs for each version to the markdown string
-    for ver, amis in amis_by_version_bundle2.items():
-        ver_str = ''
-        ver_str += '\n # '+ ver + '\n'
-        for region, ami in amis.items():
-            ver_str += '- ' + region + ': ' + ami + '\n'
-        ver_str += '\n[Go back to aws.md](../../aws.md) \n'
-        with open('aws/bundle2/' + ver + '.md', 'w') as f:
-            f.write(ver_str)
-        logging.info(f"aws/bundle2/{ver}.md file has been modified.")
 
-    # Add the AMI IDs for each version to the markdown string
-    for ver, amis in amis_by_version_panorama.items():
-        ver_str = ''
-        ver_str += '\n # '+ ver + '\n'
-        for region, ami in amis.items():
-            ver_str += '- ' + region + ': ' + ami + '\n'
-        ver_str += '\n[Go back to aws.md](../../aws.md) \n'
-        with open('aws/panorama/' + ver + '.md', 'w') as f:
-            f.write(ver_str)
-        logging.info(f"aws/panorama/{ver}.md file has been modified.")
+def sync_version_pages(records):
+    """Write the per-version pages, then delete only what is genuinely gone.
 
-except Exception as e:
-    logging.info(f"Exception {e!r}", file=sys.stderr)
+    The previous version emptied every directory before fetching anything, so
+    a mid-run failure could commit the deletion of the whole dataset. Nothing
+    is removed here until the replacement content is already in hand.
+    """
+    wanted = {}
+    for record in records:
+        directory = DIRECTORIES[(record["product"], record["licence"])]
+        wanted[os.path.join("aws", directory, f"{record['version']}.md")] = (
+            render_version_page(record)
+        )
+
+    written = 0
+    for path, text in wanted.items():
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        if panos_output.write_text_if_changed(path, text):
+            written += 1
+
+    removed = 0
+    for directory in set(DIRECTORIES.values()):
+        folder = os.path.join("aws", directory)
+        if not os.path.isdir(folder):
+            continue
+        for name in os.listdir(folder):
+            path = os.path.join(folder, name)
+            if os.path.isfile(path) and name.endswith(".md") and path not in wanted:
+                os.remove(path)
+                removed += 1
+    return written, removed
+
+
+def main():
+    session = boto3.Session()
+    eol_table = panos_output.load_eol()
+    skipped = []
+
+    unknown_codes = {}
+    queryable, not_opted_in = all_regions(session)
+    found, versions, unreachable = collect(
+        session, queryable, skipped, unknown_codes
+    )
+
+    for name, reason in skipped:
+        logging.warning("skipped %s: %s", name, reason)
+    for code, example in unknown_codes.items():
+        logging.warning("untracked product code %s, e.g. %s", code, example)
+
+    if not found:
+        sys.exit("no AMIs found - refusing to publish an empty listing")
+
+    covered = [r for r in queryable if r not in unreachable]
+    uncovered = sorted(not_opted_in + unreachable)
+    records = build_records(found, versions, eol_table)
+
+    if panos_output.write_text_if_changed(
+        "aws.md", render_index(records, covered, uncovered)
+    ):
+        logging.info("aws.md updated")
+    written, removed = sync_version_pages(records)
+    logging.info("version pages: %d written, %d removed", written, removed)
+    path, changed = panos_output.write_provider_json("aws", records)
+    logging.info("%s %s", path, "updated" if changed else "unchanged")
+    path, changed = panos_output.write_combined()
+    logging.info("%s %s", path, "updated" if changed else "unchanged")
+    logging.info(
+        "%d versions across %d regions (%d not covered)",
+        len(records), len(covered), len(uncovered),
+    )
+
+
+if __name__ == "__main__":
+    main()

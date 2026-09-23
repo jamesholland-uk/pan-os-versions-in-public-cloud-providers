@@ -7,6 +7,8 @@ on:
 
 jobs:
   panos-checker:
+    permissions:
+      contents: write
     name: "panos-checker"
 
     runs-on: "ubuntu-latest"
@@ -18,25 +20,20 @@ jobs:
 
       - name: Run Azure processing
         run: |-
-          # 38.3.0+ defaults to Compute API 2026-04-01, which is not yet
-          # registered for marketplace image listing (locations/publishers).
-          pip install azure-identity azure-mgmt-compute==38.2.0
-          python azure-processing.py > azure.md
+          pip install -r requirements.txt
+          python azure-processing.py
         env:
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      
-      - name: Commit
+
+      - name: Commit and Push
         run: |-
-          git config user.name "Jimmy"
-          git config user.email "jamesholland-uk@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}          
-          git add azure.md
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add azure.md data/
           timestamp=$(date -u)
           git commit -m "Latest data: ${timestamp}" || exit 0
-
-      - name: Push
-        run: |-
+          git pull --rebase
           git push

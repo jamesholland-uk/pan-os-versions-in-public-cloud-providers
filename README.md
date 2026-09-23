@@ -6,11 +6,104 @@ The initial intended use of the information provided within this project is for 
 
 ## The Lists
 
+For reading:
+
 - [AWS](aws.md) - including listings of AMI IDs
 - [Azure](azure.md) - with Offers and SKUs
 - [GCP](gcp.md) - with image names
 
+For automation, the same data as JSON:
+
+| File | Contents |
+| --- | --- |
+| [`data/versions.json`](data/versions.json) | Every image across all three providers, each record tagged with `provider` |
+| [`data/aws.json`](data/aws.json) | AWS only - `product_code` and an `amis` map of region to AMI ID |
+| [`data/azure.json`](data/azure.json) | Azure only - `offer`, `sku` and the `image_version` to deploy |
+| [`data/gcp.json`](data/gcp.json) | GCP only - the `image_name` to deploy |
+
+Each record carries both forms of the version: `version` is the canonical PAN-OS string a human reads (`11.2.7-h13`), and the provider fields carry the raw identifier the cloud actually expects (Azure `11.2.713`, GCP `vmseries-flex-byol-11271h13`, AWS an AMI ID per region). Use the canonical form to decide, the raw form to deploy.
+
+```json
+{
+  "version": "12.1.9",
+  "major": 12, "minor": 1, "patch": 9, "hotfix": null,
+  "train": "12.1",
+  "product": "vm-series",
+  "licence": "bundle3",
+  "eol": null,
+  "eol_date": null,
+  "product_code": "1rfiaqne1ae8ivks1wh0xyx4g",
+  "amis": { "eu-west-1": "ami-0...", "us-east-1": "ami-0..." }
+}
+```
+
+`eol` is `true` past the published end-of-life date for that release train, `false` before it, and `null` when no date is recorded in [`eol.json`](eol.json). An unknown date is never reported as supported, so filter on `eol != true` rather than `eol == false`.
+
+## Using the JSON from Terraform
+
+Pick the newest non-EOL BYOL VM-Series image available in a given region:
+
+```hcl
+data "http" "panos_aws" {
+  url = "https://raw.githubusercontent.com/jamesholland-uk/pan-os-versions-in-public-cloud-providers/main/data/aws.json"
+}
+
+locals {
+  region = "eu-west-1"
+
+  candidates = [
+    for image in jsondecode(data.http.panos_aws.response_body).images : image
+    if image.product == "vm-series"
+    && image.licence == "byol"
+    && image.eol != true
+    && contains(keys(image.amis), local.region)
+  ]
+
+  # Zero-pad each component so a plain string sort orders the versions
+  # correctly, then take the last one.
+  by_version = {
+    for image in local.candidates :
+    format("%03d%03d%03d%03d", image.major, image.minor, image.patch, coalesce(image.hotfix, 0)) => image
+  }
+  latest = local.by_version[element(sort(keys(local.by_version)), length(local.by_version) - 1)]
+}
+
+resource "aws_instance" "vmseries" {
+  ami           = local.latest.amis[local.region]
+  instance_type = "m5.xlarge"
+  # ...
+}
+```
+
+The same shape works for Azure (`image_version` into `source_image_reference`) and GCP (`image_name` into `boot_disk`).
+
+## Coverage and caveats
+
+- **AWS regions.** AMI IDs are collected only from the regions the AWS account behind this project has enabled - currently 17. The opt-in regions it cannot reach are listed at the bottom of [aws.md](aws.md) so the gap is visible rather than silent. An AMI missing for a region here does not mean Palo Alto Networks has not published there.
+- **End-of-life dates.** Held in [`eol.json`](eol.json), maintained by hand from Palo Alto Networks' [end-of-life summary](https://www.paloaltonetworks.com/services/support/end-of-life-announcements/end-of-life-summary). Trains with no date recorded are left unmarked.
+- **Prisma AIRS (AI Runtime Security)** is listed as its own product (`"product": "airs"`) on AWS and Azure. Since the March 2026 release it's the same PAN-OS image as VM-Series, with the licence deciding which mode it runs in, but both clouds still sell it as a separate marketplace listing (an AWS product code; the Azure `airs-flex` offer), so it has its own identifiers to deploy with. GCP has not been checked for AIRS images yet.
+- **New listings are flagged, not guessed.** An AWS marketplace listing from Palo Alto Networks that isn't in `aws-processing.py`'s product-code table is logged as a warning on every run, so a new one gets noticed instead of quietly going unpublished.
+- **This is not an official Palo Alto Networks source.** It reads the public cloud APIs and publishes what they return.
+
 Other cloud providers may be added in future; suggestions, and contributions to the code, are welcome.
+
+## Running it yourself
+
+```bash
+pip install -r requirements.txt
+
+python aws-processing.py                                    # needs AWS credentials
+AZURE_SUBSCRIPTION_ID=... python azure-processing.py        # az login, or a service principal
+gcloud compute images list --project paloaltonetworksgcp-public --no-standard-images \
+  --format="value(NAME)" --filter="name~'vmseries'" > gcp-list.txt
+gcloud compute images list --project paloaltonetworksgcp-public --no-standard-images \
+  --format="value(NAME)" --filter="name~'panorama'" > gcp-rama-list.txt
+python gcp-processing.py gcp-list.txt gcp-rama-list.txt
+
+python -m unittest discover -p "test_*.py"                  # parsing and EOL tests
+```
+
+Each script writes its own Markdown page and JSON file, and refuses to publish an empty listing if the API returns nothing. The three clouds each encode PAN-OS versions differently; `panos_version.py` holds the parsers and is the only place that logic lives.
 
 ## Acknowledgements
 

@@ -7,6 +7,8 @@ on:
 
 jobs:
   panos-checker:
+    permissions:
+      contents: write
     name: "panos-checker"
 
     runs-on: "ubuntu-latest"
@@ -36,17 +38,14 @@ jobs:
 
       - name: Run GCP post-processing
         run: |-
-          python gcp-processing.py gcp-list.txt gcp-rama-list.txt > gcp.md
+          python gcp-processing.py gcp-list.txt gcp-rama-list.txt
 
-      - name: Commit
+      - name: Commit and Push
         run: |-
-          git config user.name "Jimmy"
-          git config user.email "jamesholland-uk@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}          
-          git add gcp.md
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add gcp.md data/
           timestamp=$(date -u)
           git commit -m "Latest data: ${timestamp}" || exit 0
-
-      - name: Push
-        run: |-
+          git pull --rebase
           git push
