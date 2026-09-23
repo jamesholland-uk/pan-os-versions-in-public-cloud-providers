@@ -5,4 +5,4 @@ boto3
 azure-identity
 # 38.3.0+ defaults to Compute API 2026-04-01, which is not yet registered for
 # marketplace image listing (locations/publishers).
-azure-mgmt-compute==38.2.0
+azure-mgmt-compute==38.3.0
