@@ -1,5 +1,7 @@
 # Base PAN-OS Images on Cloud Service Providers
 
+PAN-OS VM-Series, Panorama and Prisma AIRS image IDs across AWS, Azure and GCP, as Markdown and JSON.
+
 This project exists to track the versions of base PAN-OS images which are present within major Cloud Service Providers such as [AWS](aws.md), [Azure](azure.md) and [GCP](gcp.md). The list of versions is retrieved and parsed directly from the Cloud Service Providers via their APIs. Other cloud-specific details are also made available where applicable, for example, AMI IDs per region for AWS images, Offers and SKUs for Azure, and image names for GCP.
 
 The initial intended use of the information provided within this project is for infrastructure-as-code (IaC) deployments, where the cloud-specific details such as AMIs, SKUs and image names can be used as values to deploy the required version of PAN-OS for VM-Series or Panorama. There is also benefit in the historical record (via the commits to this respository) of PAN-OS versions being added and/or removed from the Cloud Service Providers.
@@ -83,6 +85,7 @@ The same shape works for Azure (`image_version` into `source_image_reference`) a
 - **End-of-life dates.** Held in [`eol.json`](eol.json), maintained by hand from Palo Alto Networks' [end-of-life summary](https://www.paloaltonetworks.com/services/support/end-of-life-announcements/end-of-life-summary). Trains with no date recorded are left unmarked.
 - **Prisma AIRS (AI Runtime Security)** is listed as its own product (`"product": "airs"`) on all three clouds. Since the March 2026 release it's the same PAN-OS image as VM-Series, with the licence deciding which mode it runs in, but each cloud still publishes it as a separate listing (an AWS product code, the Azure `airs-flex` offer, GCP `ai-runtime-security-byol-*` images), so it has its own identifiers to deploy with.
 - **New listings are flagged, not guessed.** An AWS marketplace listing from Palo Alto Networks that isn't in `aws-processing.py`'s product-code table is logged as a warning on every run, so a new one gets noticed instead of quietly going unpublished.
+- **Public clouds only.** Images for private clouds and hypervisors (ESXi, KVM, Hyper-V and so on) are only available from the authenticated customer download area on the Palo Alto Networks support site, so they are out of scope.
 - **This is not an official Palo Alto Networks source.** It reads the public cloud APIs and publishes what they return.
 
 Other cloud providers may be added in future; suggestions, and contributions to the code, are welcome.
