@@ -5,6 +5,16 @@ on:
   schedule:
     - cron: "15 */6 * * *"
 
+# All three checkers rewrite data/versions.json, so they take turns rather
+# than racing each other to push. Shared by name across the three workflows.
+# GitHub keeps only one run waiting per group: a third arrival cancels the
+# one already waiting. Runs take a minute or two against 15-minute gaps, so
+# on the schedule this does not happen; a cancelled run is simply retried at
+# its next slot. Dispatching all three by hand at once will cancel one.
+concurrency:
+  group: data-commit
+  cancel-in-progress: false
+
 jobs:
   panos-checker:
     permissions:
@@ -14,9 +24,15 @@ jobs:
     runs-on: "ubuntu-latest"
 
     steps:
-      - uses: "actions/checkout@v7"
+      - uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
         with:
           ref: ${{ github.ref_name }}
+
+      # Pinned so the interpreter does not change under the scripts whenever
+      # GitHub moves ubuntu-latest to a new image.
+      - uses: "actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97" # v7.0.0
+        with:
+          python-version: "3.12"
 
       - name: Run Azure processing
         run: |-
