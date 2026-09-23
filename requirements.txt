@@ -5,6 +5,7 @@
 boto3==1.43.100
 azure-identity==1.25.3
 # 38.3.0 briefly broke marketplace image listing in Aug 2026 (Compute API
-# 2026-04-01 was not yet registered), so run the Azure workflow on a Renovate
-# branch before merging.
+# 2026-04-01 was not yet registered). The AWS and Azure checkers now dry-run
+# on any pull request that changes this file, so a break like that shows up
+# as a failed check on the Renovate PR.
 azure-mgmt-compute==38.3.0
