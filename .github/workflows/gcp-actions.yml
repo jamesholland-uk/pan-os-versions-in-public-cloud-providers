@@ -36,9 +36,13 @@ jobs:
         run: |-
           gcloud compute images list --project paloaltonetworksgcp-public --no-standard-images --format="value(NAME)" --filter="name~'panorama'" > gcp-rama-list.txt
 
+      - name: "Get GCP Prisma AIRS base images lists"
+        run: |-
+          gcloud compute images list --project paloaltonetworksgcp-public --no-standard-images --format="value(NAME)" --filter="name~'ai-runtime-security'" > gcp-airs-list.txt
+
       - name: Run GCP post-processing
         run: |-
-          python gcp-processing.py gcp-list.txt gcp-rama-list.txt
+          python gcp-processing.py gcp-list.txt gcp-rama-list.txt gcp-airs-list.txt
 
       - name: Commit and Push
         run: |-

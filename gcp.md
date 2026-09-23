@@ -211,6 +211,33 @@ Image names pack the version with no separators: `10.2.0` is `1020`, and a hotfi
 | 8.1.25-h1 (EOL) | `vmseries-bundle2-8125h1` |
 | 9.0.16-h5 (EOL) | `vmseries-bundle2-9016h5` |
 
+## Prisma AIRS (AI Runtime Security)
+
+### BYOL
+
+| Version | Image name |
+| --- | --- |
+| 11.2.2-h1 | `ai-runtime-security-byol-1122h1` |
+| 11.2.3 | `ai-runtime-security-byol-1123` |
+| 11.2.3-h1 | `ai-runtime-security-byol-1123h1` |
+| 11.2.4-h1 | `ai-runtime-security-byol-1124h1` |
+| 11.2.4-h5 | `ai-runtime-security-byol-1124h5` |
+| 11.2.5 | `ai-runtime-security-byol-1125` |
+| 11.2.5-h1 | `ai-runtime-security-byol-1125h1` |
+| 11.2.7-h13 | `ai-runtime-security-byol-1127h13` |
+| 11.2.9 | `ai-runtime-security-byol-1129` |
+| 11.2.10 | `ai-runtime-security-byol-11210` |
+| 11.2.10-h6 | `ai-runtime-security-byol-11210h6` |
+| 11.2.11 | `ai-runtime-security-byol-11211` |
+| 11.2.12 | `ai-runtime-security-byol-11212` |
+| 12.1.3 | `ai-runtime-security-byol-1213` |
+| 12.1.4 | `ai-runtime-security-byol-1214` |
+| 12.1.4-h5 | `ai-runtime-security-byol-1214h5` |
+| 12.1.5 | `ai-runtime-security-byol-1215` |
+| 12.1.6 | `ai-runtime-security-byol-1216` |
+| 12.1.7 | `ai-runtime-security-byol-1217` |
+| 12.1.9 | `ai-runtime-security-byol-1219` |
+
 ## Panorama
 
 | Version | Image name |

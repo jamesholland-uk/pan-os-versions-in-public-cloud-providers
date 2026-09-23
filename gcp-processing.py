@@ -2,7 +2,7 @@
 
 """Turn the two gcloud image listings into gcp.md and data/gcp.json.
 
-Usage: gcp-processing.py <vmseries-list> <panorama-list>
+Usage: gcp-processing.py <vmseries-list> <panorama-list> <airs-list>
 
 Each input is one image name per line, as produced by
 `gcloud compute images list --project paloaltonetworksgcp-public`.
@@ -13,7 +13,7 @@ import re
 import sys
 
 import panos_output
-from panos_version import ParseError, parse_gcp, sort_key
+from panos_version import ParseError, parse_dotted, parse_gcp
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
@@ -37,6 +37,14 @@ VMSERIES_FAMILIES = [
 # spells it out, so it is handled separately.
 PANORAMA_PACKED = re.compile(r"^panorama-(?:byol-)?(\d.*)$")
 PANORAMA_DASHED = re.compile(r"^panorama-gcp-(\d+)-(\d+)-(\d+)$")
+
+# Prisma AIRS (AI Runtime Security) has two styles, mirroring VM-Series:
+#   ai-runtime-security-byol-1127h13     packed, as VM-Series
+#   pa-ai-runtime-security-gcp-12-1-3    dashed
+AIRS_PACKED_PREFIX = "ai-runtime-security-byol-"
+AIRS_DASHED = re.compile(
+    r"^pa-ai-runtime-security-gcp-(\d+)-(\d+)-(\d+)(?:-h(\d+))?$"
+)
 
 
 def classify_vmseries(name):
@@ -97,6 +105,32 @@ def collect_panorama(names, eol_table, skipped):
     return records
 
 
+def collect_airs(names, eol_table, skipped):
+    records = []
+    for name in names:
+        try:
+            dashed = AIRS_DASHED.match(name)
+            if dashed:
+                major, minor, patch, hotfix = dashed.groups()
+                version = parse_dotted(
+                    f"{major}.{minor}.{patch}" + (f"-h{hotfix}" if hotfix else "")
+                )
+            elif name.startswith(AIRS_PACKED_PREFIX):
+                version = parse_gcp(name[len(AIRS_PACKED_PREFIX):])
+            else:
+                skipped.append((name, "unrecognised AIRS image name"))
+                continue
+        except ParseError as error:
+            skipped.append((name, str(error)))
+            continue
+        records.append(
+            panos_output.make_record(
+                version, "airs", "byol", eol_table, cpu="flex", image_name=name
+            )
+        )
+    return records
+
+
 def section(records, cpu, licence):
     """The distinct versions in one section, oldest first."""
     matching = [r for r in records if r.get("cpu") == cpu and r["licence"] == licence]
@@ -106,7 +140,17 @@ def section(records, cpu, licence):
     return sorted(seen.values(), key=lambda r: (r["major"], r["minor"], r["patch"], r["hotfix"] or 0))
 
 
-def render_markdown(vmseries, panorama):
+def version_table(rows):
+    out = ["\n| Version | Image name |\n| --- | --- |\n"]
+    for record in rows:
+        out.append(
+            f"| {panos_output.markdown_label(record)} "
+            f"| `{record['image_name']}` |\n"
+        )
+    return out
+
+
+def render_markdown(vmseries, panorama, airs):
     out = ["\n# GCP\n"]
     out.append(
         "\nImage names pack the version with no separators: `10.2.0` is "
@@ -136,32 +180,29 @@ def render_markdown(vmseries, panorama):
             if not rows:
                 out.append("\nNone published.\n")
                 continue
-            out.append("\n| Version | Image name |\n| --- | --- |\n")
-            for record in rows:
-                out.append(
-                    f"| {panos_output.markdown_label(record)} "
-                    f"| `{record['image_name']}` |\n"
-                )
+            out += version_table(rows)
+
+    out.append("\n## Prisma AIRS (AI Runtime Security)\n")
+    out.append("\n### BYOL\n")
+    rows = section(airs, "flex", "byol")
+    out += version_table(rows) if rows else ["\nNone published.\n"]
 
     out.append("\n## Panorama\n")
-    rows = section(panorama, None, "byol")
-    out.append("\n| Version | Image name |\n| --- | --- |\n")
-    for record in rows:
-        out.append(
-            f"| {panos_output.markdown_label(record)} "
-            f"| `{record['image_name']}` |\n"
-        )
+    out += version_table(section(panorama, None, "byol"))
     return "".join(out)
 
 
 def main():
-    if len(sys.argv) != 3:
-        sys.exit("usage: gcp-processing.py <vmseries-list> <panorama-list>")
+    if len(sys.argv) != 4:
+        sys.exit(
+            "usage: gcp-processing.py <vmseries-list> <panorama-list> <airs-list>"
+        )
 
     eol_table = panos_output.load_eol()
     skipped = []
     vmseries = collect_vmseries(read_names(sys.argv[1]), eol_table, skipped)
     panorama = collect_panorama(read_names(sys.argv[2]), eol_table, skipped)
+    airs = collect_airs(read_names(sys.argv[3]), eol_table, skipped)
 
     # Images that did not parse are logged rather than dropped in silence:
     # a new naming scheme should be visible in the run log, not just absent
@@ -172,8 +213,10 @@ def main():
     if not vmseries:
         sys.exit("no VM-Series images parsed - refusing to publish an empty listing")
 
-    records = vmseries + panorama
-    if panos_output.write_text_if_changed("gcp.md", render_markdown(vmseries, panorama)):
+    records = vmseries + panorama + airs
+    if panos_output.write_text_if_changed(
+        "gcp.md", render_markdown(vmseries, panorama, airs)
+    ):
         logging.info("gcp.md updated")
     path, changed = panos_output.write_provider_json("gcp", records)
     logging.info("%s %s", path, "updated" if changed else "unchanged")

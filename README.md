@@ -81,7 +81,7 @@ The same shape works for Azure (`image_version` into `source_image_reference`) a
 
 - **AWS regions.** AMI IDs are collected only from the regions the AWS account behind this project has enabled - currently 17. The opt-in regions it cannot reach are listed at the bottom of [aws.md](aws.md) so the gap is visible rather than silent. An AMI missing for a region here does not mean Palo Alto Networks has not published there.
 - **End-of-life dates.** Held in [`eol.json`](eol.json), maintained by hand from Palo Alto Networks' [end-of-life summary](https://www.paloaltonetworks.com/services/support/end-of-life-announcements/end-of-life-summary). Trains with no date recorded are left unmarked.
-- **Prisma AIRS (AI Runtime Security)** is listed as its own product (`"product": "airs"`) on AWS and Azure. Since the March 2026 release it's the same PAN-OS image as VM-Series, with the licence deciding which mode it runs in, but both clouds still sell it as a separate marketplace listing (an AWS product code; the Azure `airs-flex` offer), so it has its own identifiers to deploy with. GCP has not been checked for AIRS images yet.
+- **Prisma AIRS (AI Runtime Security)** is listed as its own product (`"product": "airs"`) on all three clouds. Since the March 2026 release it's the same PAN-OS image as VM-Series, with the licence deciding which mode it runs in, but each cloud still publishes it as a separate listing (an AWS product code, the Azure `airs-flex` offer, GCP `ai-runtime-security-byol-*` images), so it has its own identifiers to deploy with.
 - **New listings are flagged, not guessed.** An AWS marketplace listing from Palo Alto Networks that isn't in `aws-processing.py`'s product-code table is logged as a warning on every run, so a new one gets noticed instead of quietly going unpublished.
 - **This is not an official Palo Alto Networks source.** It reads the public cloud APIs and publishes what they return.
 
@@ -98,7 +98,9 @@ gcloud compute images list --project paloaltonetworksgcp-public --no-standard-im
   --format="value(NAME)" --filter="name~'vmseries'" > gcp-list.txt
 gcloud compute images list --project paloaltonetworksgcp-public --no-standard-images \
   --format="value(NAME)" --filter="name~'panorama'" > gcp-rama-list.txt
-python gcp-processing.py gcp-list.txt gcp-rama-list.txt
+gcloud compute images list --project paloaltonetworksgcp-public --no-standard-images \
+  --format="value(NAME)" --filter="name~'ai-runtime-security'" > gcp-airs-list.txt
+python gcp-processing.py gcp-list.txt gcp-rama-list.txt gcp-airs-list.txt
 
 python -m unittest discover -p "test_*.py"                  # parsing and EOL tests
 ```
