@@ -47,7 +47,7 @@ Pick the newest non-EOL BYOL VM-Series image available in a given region:
 
 ```hcl
 data "http" "panos_aws" {
-  url = "https://raw.githubusercontent.com/jamesholland-uk/pan-os-versions-in-public-cloud-providers/main/data/aws.json"
+  url = "https://raw.githubusercontent.com/jamesholland-uk/pan-os-image-catalog/main/data/aws.json"
 }
 
 locals {
@@ -116,8 +116,8 @@ Each script writes its own Markdown page and JSON file, and refuses to publish a
 - Many thanks to [@lachlanjholmes](https://www.github.com/lachlanjholmes) for contributing the initial AWS code for image versions, an enhancement to list the AMI IDs per region, and adding Panorama versions and AMI IDs per region for AWS
 
 ## Status
-![Workflow Badge](https://github.com/jamesholland-uk/pan-os-csp-versions/actions/workflows/aws-actions.yml/badge.svg)
-![Workflow Badge](https://github.com/jamesholland-uk/pan-os-csp-versions/actions/workflows/azure-actions.yml/badge.svg)
-![Workflow Badge](https://github.com/jamesholland-uk/pan-os-csp-versions/actions/workflows/gcp-actions.yml/badge.svg)
+![Workflow Badge](https://github.com/jamesholland-uk/pan-os-image-catalog/actions/workflows/aws-actions.yml/badge.svg)
+![Workflow Badge](https://github.com/jamesholland-uk/pan-os-image-catalog/actions/workflows/azure-actions.yml/badge.svg)
+![Workflow Badge](https://github.com/jamesholland-uk/pan-os-image-catalog/actions/workflows/gcp-actions.yml/badge.svg)
 ## Support
 Community supported, as per the [support statement](SUPPORT.md).
