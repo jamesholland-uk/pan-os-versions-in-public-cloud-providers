@@ -5,6 +5,12 @@ on:
   schedule:
     - cron: "15 */6 * * *"
 
+# All three checkers rewrite data/versions.json, so they take turns rather
+# than racing each other to push. Shared by name across the three workflows.
+concurrency:
+  group: data-commit
+  cancel-in-progress: false
+
 jobs:
   panos-checker:
     permissions:
