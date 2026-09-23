@@ -88,18 +88,24 @@ def enable_new_regions(session):
     a region still enabling is picked up by a later run. Needs only
     account:ListRegions and account:EnableRegion - without them this logs
     and carries on, so coverage never gets worse than the account allows.
+    AWS also throttles how many regions can be enabling at once, so a
+    refused region is simply retried on the next run.
     """
     client = session.client("account", region_name="us-east-1", config=REGION_CONFIG)
     try:
         pages = client.get_paginator("list_regions").paginate(
             RegionOptStatusContains=["DISABLED"]
         )
-        for page in pages:
-            for region in page["Regions"]:
-                client.enable_region(RegionName=region["RegionName"])
-                logging.info("enabling region %s", region["RegionName"])
+        disabled = [r["RegionName"] for page in pages for r in page["Regions"]]
     except (ClientError, BotoCoreError) as error:
-        logging.warning("could not enable new regions: %s", error)
+        logging.warning("could not list regions to enable: %s", error)
+        return
+    for name in disabled:
+        try:
+            client.enable_region(RegionName=name)
+            logging.info("enabling region %s", name)
+        except (ClientError, BotoCoreError) as error:
+            logging.warning("could not enable region %s yet: %s", name, error)
 
 
 def all_regions(session):
