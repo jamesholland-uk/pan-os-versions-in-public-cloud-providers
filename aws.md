@@ -1,7 +1,7 @@
 
 # AWS
 
-AMI IDs are region-specific. Each version below links to its IDs across the 17 regions this project covers.
+AMI IDs are region-specific. Each version below links to its IDs across the 20 regions this project covers.
 
 > Versions marked **(EOL)** are past Palo Alto Networks' published end-of-standard-support date for that release train and should not be used for new deployments. Where extended support is still running, the date is given. Trains with no published date are left unmarked. See the [end-of-life summary](https://www.paloaltonetworks.com/services/support/end-of-life-announcements/end-of-life-summary) for the authoritative list and the conditions attached to extended support.
 
@@ -91,9 +91,6 @@ AMI IDs are region-specific. Each version below links to its IDs across the 17 r
 
 No AMI IDs are collected for the regions below, because the AWS account behind this project has not enabled them yet (new regions are enabled automatically, which can take a few hours) or could not reach them on this run. This is a limit of the account doing the querying, not a statement that Palo Alto Networks does not publish there.
 
-- `af-south-1`
-- `ap-east-1`
-- `ap-east-2`
 - `ap-south-2`
 - `ap-southeast-3`
 - `ap-southeast-4`
