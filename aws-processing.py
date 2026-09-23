@@ -80,6 +80,28 @@ REGION_CONFIG = Config(
 )
 
 
+def enable_new_regions(session):
+    """Opt the account in to any region it has not enabled yet.
+
+    AWS launches new regions as opt-in, so without this every new region is
+    silently missing until someone notices. Enabling takes minutes to hours;
+    a region still enabling is picked up by a later run. Needs only
+    account:ListRegions and account:EnableRegion - without them this logs
+    and carries on, so coverage never gets worse than the account allows.
+    """
+    client = session.client("account", region_name="us-east-1", config=REGION_CONFIG)
+    try:
+        pages = client.get_paginator("list_regions").paginate(
+            RegionOptStatusContains=["DISABLED"]
+        )
+        for page in pages:
+            for region in page["Regions"]:
+                client.enable_region(RegionName=region["RegionName"])
+                logging.info("enabling region %s", region["RegionName"])
+    except (ClientError, BotoCoreError) as error:
+        logging.warning("could not enable new regions: %s", error)
+
+
 def all_regions(session):
     """Return (queryable, not_opted_in) region names.
 
@@ -200,10 +222,12 @@ def render_index(records, covered, uncovered):
     if uncovered:
         out.append("\n## Regions not covered\n")
         out.append(
-            "\nThe AWS account behind this project has not opted in to the "
-            "regions below, so no AMI IDs are collected for them. This is a "
-            "limit of the account doing the querying, not a statement that "
-            "Palo Alto Networks does not publish there.\n\n"
+            "\nNo AMI IDs are collected for the regions below, because the "
+            "AWS account behind this project has not enabled them yet (new "
+            "regions are enabled automatically, which can take a few hours) "
+            "or could not reach them on this run. This is a limit of the "
+            "account doing the querying, not a statement that Palo Alto "
+            "Networks does not publish there.\n\n"
         )
         out.append("".join(f"- `{region}`\n" for region in uncovered))
     out.append("\n")
@@ -257,6 +281,7 @@ def main():
     skipped = []
 
     unknown_codes = {}
+    enable_new_regions(session)
     queryable, not_opted_in = all_regions(session)
     found, versions, unreachable = collect(
         session, queryable, skipped, unknown_codes

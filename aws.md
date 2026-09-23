@@ -89,7 +89,7 @@ AMI IDs are region-specific. Each version below links to its IDs across the 17 r
 
 ## Regions not covered
 
-The AWS account behind this project has not opted in to the regions below, so no AMI IDs are collected for them. This is a limit of the account doing the querying, not a statement that Palo Alto Networks does not publish there.
+No AMI IDs are collected for the regions below, because the AWS account behind this project has not enabled them yet (new regions are enabled automatically, which can take a few hours) or could not reach them on this run. This is a limit of the account doing the querying, not a statement that Palo Alto Networks does not publish there.
 
 - `af-south-1`
 - `ap-east-1`
