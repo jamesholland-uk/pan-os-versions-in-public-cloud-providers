@@ -62,7 +62,7 @@ jobs:
 
       - name: Show what would be committed
         if: github.event_name == 'pull_request'
-        run: git status --short azure.md data/
+        run: git status --short azure.md data/ | grep . || echo "No data changes."
 
       - name: Commit and Push
         if: github.event_name != 'pull_request'
