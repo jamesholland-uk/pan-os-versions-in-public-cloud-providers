@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: "actions/checkout@v7"
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.ref_name }}
 
       - name: Run Azure processing
         run: |-

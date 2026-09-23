@@ -30,7 +30,6 @@ PRODUCT_CODES = {
     "b261y39exndwe1ltro1tqpeog": ("airs", "byol"),
     "eclz7j04vu9lf8ont8ta3n17o": ("panorama", "byol"),
 }
-MARKETPLACE_OWNER_ID = "679593333241"
 NAME_FILTERS = [
     "PA-VM-AWS*",
     "Panorama-AWS*",
@@ -140,8 +139,14 @@ def collect(session, regions, skipped, unknown_codes):
         try:
             images = []
             for name_filter in NAME_FILTERS:
+                # "aws-marketplace" rather than an owner account ID: Marketplace
+                # publishes from a different account in each opt-in region
+                # (971815773857 in il-central-1, 939706979954 in af-south-1),
+                # so a fixed ID finds nothing there. The product code below is
+                # what identifies a Palo Alto listing.
                 images += ec2.describe_images(
-                    Filters=[{"Name": "name", "Values": [name_filter]}]
+                    Owners=["aws-marketplace"],
+                    Filters=[{"Name": "name", "Values": [name_filter]}],
                 )["Images"]
         except (ClientError, BotoCoreError) as error:
             unreachable.append(region)
@@ -149,8 +154,6 @@ def collect(session, regions, skipped, unknown_codes):
             continue
 
         for ami in images:
-            if ami["OwnerId"] != MARKETPLACE_OWNER_ID:
-                continue
             product_codes = ami.get("ProductCodes")
             if not product_codes:
                 continue
