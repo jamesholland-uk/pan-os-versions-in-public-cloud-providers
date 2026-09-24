@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "provider": "gcp",
-  "generated": "2026-09-23T14:12:09Z",
+  "generated": "2026-09-24T05:12:56Z",
   "images": [
     {
       "version": "8.1.0",
@@ -2314,6 +2314,21 @@
       "image_name": "vmseries-flex-byol-11212"
     },
     {
+      "version": "11.2.15",
+      "major": 11,
+      "minor": 2,
+      "patch": 15,
+      "hotfix": null,
+      "train": "11.2",
+      "product": "vm-series",
+      "licence": "byol",
+      "eol": false,
+      "eol_date": "2027-05-02",
+      "eol_extended_date": "2027-08-31",
+      "cpu": "flex",
+      "image_name": "vmseries-flex-byol-11215"
+    },
+    {
       "version": "11.2.3-h3",
       "major": 11,
       "minor": 2,
@@ -2477,6 +2492,21 @@
       "eol_extended_date": "2029-08-28",
       "cpu": "flex",
       "image_name": "vmseries-flex-byol-1217"
+    },
+    {
+      "version": "12.1.7-h6",
+      "major": 12,
+      "minor": 1,
+      "patch": 7,
+      "hotfix": 6,
+      "train": "12.1",
+      "product": "vm-series",
+      "licence": "byol",
+      "eol": false,
+      "eol_date": "2028-08-28",
+      "eol_extended_date": "2029-08-28",
+      "cpu": "flex",
+      "image_name": "vmseries-flex-byol-1217h6"
     },
     {
       "version": "12.1.9",
@@ -2882,6 +2912,21 @@
       "eol_extended_date": "2029-08-28",
       "cpu": "flex",
       "image_name": "ai-runtime-security-byol-1217"
+    },
+    {
+      "version": "12.1.7-h6",
+      "major": 12,
+      "minor": 1,
+      "patch": 7,
+      "hotfix": 6,
+      "train": "12.1",
+      "product": "airs",
+      "licence": "byol",
+      "eol": false,
+      "eol_date": "2028-08-28",
+      "eol_extended_date": "2029-08-28",
+      "cpu": "flex",
+      "image_name": "ai-runtime-security-byol-1217h6"
     },
     {
       "version": "12.1.9",

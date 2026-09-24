@@ -50,12 +50,14 @@ Image names pack the version with no separators: `10.2.0` is `1020`, and a hotfi
 | 11.2.10-h6 | `vmseries-flex-byol-11210h6` |
 | 11.2.11 | `vmseries-flex-byol-11211` |
 | 11.2.12 | `vmseries-flex-byol-11212` |
+| 11.2.15 | `vmseries-flex-byol-11215` |
 | 12.1.2 | `vmseries-flex-byol-1212` |
 | 12.1.4 | `vmseries-flex-byol-1214` |
 | 12.1.4-h5 | `vmseries-flex-byol-1214h5` |
 | 12.1.5 | `vmseries-flex-byol-1215` |
 | 12.1.6 | `vmseries-flex-byol-1216` |
 | 12.1.7 | `vmseries-flex-byol-1217` |
+| 12.1.7-h6 | `vmseries-flex-byol-1217h6` |
 | 12.1.9 | `vmseries-flex-byol-1219` |
 
 ### PAYG Bundle 1
@@ -236,6 +238,7 @@ Image names pack the version with no separators: `10.2.0` is `1020`, and a hotfi
 | 12.1.5 | `ai-runtime-security-byol-1215` |
 | 12.1.6 | `ai-runtime-security-byol-1216` |
 | 12.1.7 | `ai-runtime-security-byol-1217` |
+| 12.1.7-h6 | `ai-runtime-security-byol-1217h6` |
 | 12.1.9 | `ai-runtime-security-byol-1219` |
 
 ## Panorama
