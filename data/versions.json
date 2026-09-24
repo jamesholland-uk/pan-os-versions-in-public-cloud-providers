@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-09-24T05:12:56Z",
+  "generated": "2026-09-24T17:27:50Z",
   "images": [
     {
       "provider": "aws",
@@ -8601,6 +8601,22 @@
     },
     {
       "provider": "gcp",
+      "version": "11.2.15",
+      "major": 11,
+      "minor": 2,
+      "patch": 15,
+      "hotfix": null,
+      "train": "11.2",
+      "product": "vm-series",
+      "licence": "bundle1",
+      "eol": false,
+      "eol_date": "2027-05-02",
+      "eol_extended_date": "2027-08-31",
+      "cpu": "flex",
+      "image_name": "vmseries-flex-bundle1-11215"
+    },
+    {
+      "provider": "gcp",
       "version": "11.2.3-h3",
       "major": 11,
       "minor": 2,
@@ -9241,6 +9257,22 @@
     },
     {
       "provider": "gcp",
+      "version": "11.2.15",
+      "major": 11,
+      "minor": 2,
+      "patch": 15,
+      "hotfix": null,
+      "train": "11.2",
+      "product": "vm-series",
+      "licence": "bundle2",
+      "eol": false,
+      "eol_date": "2027-05-02",
+      "eol_extended_date": "2027-08-31",
+      "cpu": "flex",
+      "image_name": "vmseries-flex-bundle2-11215"
+    },
+    {
+      "provider": "gcp",
       "version": "11.2.3-h3",
       "major": 11,
       "minor": 2,
@@ -9766,6 +9798,22 @@
       "eol_extended_date": "2027-08-31",
       "cpu": "flex",
       "image_name": "vmseries-flex-bundle3-11212"
+    },
+    {
+      "provider": "gcp",
+      "version": "11.2.15",
+      "major": 11,
+      "minor": 2,
+      "patch": 15,
+      "hotfix": null,
+      "train": "11.2",
+      "product": "vm-series",
+      "licence": "bundle3",
+      "eol": false,
+      "eol_date": "2027-05-02",
+      "eol_extended_date": "2027-08-31",
+      "cpu": "flex",
+      "image_name": "vmseries-flex-bundle3-11215"
     },
     {
       "provider": "gcp",
@@ -10806,6 +10854,22 @@
       "eol_extended_date": "2027-08-31",
       "cpu": "flex",
       "image_name": "ai-runtime-security-byol-11212"
+    },
+    {
+      "provider": "gcp",
+      "version": "11.2.15",
+      "major": 11,
+      "minor": 2,
+      "patch": 15,
+      "hotfix": null,
+      "train": "11.2",
+      "product": "airs",
+      "licence": "byol",
+      "eol": false,
+      "eol_date": "2027-05-02",
+      "eol_extended_date": "2027-08-31",
+      "cpu": "flex",
+      "image_name": "ai-runtime-security-byol-11215"
     },
     {
       "provider": "gcp",

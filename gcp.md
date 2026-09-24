@@ -100,6 +100,7 @@ Image names pack the version with no separators: `10.2.0` is `1020`, and a hotfi
 | 11.2.6 | `vmseries-flex-bundle1-1126` |
 | 11.2.11 | `vmseries-flex-bundle1-11211` |
 | 11.2.12 | `vmseries-flex-bundle1-11212` |
+| 11.2.15 | `vmseries-flex-bundle1-11215` |
 | 12.1.4 | `vmseries-flex-bundle1-1214` |
 | 12.1.5 | `vmseries-flex-bundle1-1215` |
 | 12.1.7 | `vmseries-flex-bundle1-1217` |
@@ -145,6 +146,7 @@ Image names pack the version with no separators: `10.2.0` is `1020`, and a hotfi
 | 11.2.6 | `vmseries-flex-bundle2-1126` |
 | 11.2.11 | `vmseries-flex-bundle2-11211` |
 | 11.2.12 | `vmseries-flex-bundle2-11212` |
+| 11.2.15 | `vmseries-flex-bundle2-11215` |
 | 12.1.4 | `vmseries-flex-bundle2-1214` |
 | 12.1.5 | `vmseries-flex-bundle2-1215` |
 | 12.1.7 | `vmseries-flex-bundle2-1217` |
@@ -182,6 +184,7 @@ Image names pack the version with no separators: `10.2.0` is `1020`, and a hotfi
 | 11.2.6 | `vmseries-flex-bundle3-1126` |
 | 11.2.11 | `vmseries-flex-bundle3-11211` |
 | 11.2.12 | `vmseries-flex-bundle3-11212` |
+| 11.2.15 | `vmseries-flex-bundle3-11215` |
 | 12.1.4 | `vmseries-flex-bundle3-1214` |
 | 12.1.5 | `vmseries-flex-bundle3-1215` |
 | 12.1.7 | `vmseries-flex-bundle3-1217` |
@@ -232,6 +235,7 @@ Image names pack the version with no separators: `10.2.0` is `1020`, and a hotfi
 | 11.2.10-h6 | `ai-runtime-security-byol-11210h6` |
 | 11.2.11 | `ai-runtime-security-byol-11211` |
 | 11.2.12 | `ai-runtime-security-byol-11212` |
+| 11.2.15 | `ai-runtime-security-byol-11215` |
 | 12.1.3 | `ai-runtime-security-byol-1213` |
 | 12.1.4 | `ai-runtime-security-byol-1214` |
 | 12.1.4-h5 | `ai-runtime-security-byol-1214h5` |
