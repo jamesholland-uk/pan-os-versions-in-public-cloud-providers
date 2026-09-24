@@ -21,6 +21,7 @@ AMI IDs are region-specific. Each version below links to its IDs across the 33 r
 - [11.2.7-h18](aws/byol/11.2.7-h18.md) - 31 regions
 - [11.2.8](aws/byol/11.2.8.md) - 32 regions
 - [11.2.12](aws/byol/11.2.12.md) - 31 regions
+- [11.2.15](aws/byol/11.2.15.md) - 31 regions
 - [12.1.7](aws/byol/12.1.7.md) - 31 regions
 - [12.1.9](aws/byol/12.1.9.md) - 31 regions
 
@@ -32,6 +33,7 @@ AMI IDs are region-specific. Each version below links to its IDs across the 33 r
 - [11.1.15](aws/bundle1/11.1.15.md) - 30 regions
 - [11.2.5](aws/bundle1/11.2.5.md) - 28 regions
 - [11.2.12](aws/bundle1/11.2.12.md) - 30 regions
+- [11.2.15](aws/bundle1/11.2.15.md) - 30 regions
 - [12.1.7](aws/bundle1/12.1.7.md) - 30 regions
 - [12.1.9](aws/bundle1/12.1.9.md) - 30 regions
 
@@ -47,6 +49,7 @@ AMI IDs are region-specific. Each version below links to its IDs across the 33 r
 - [11.1.15](aws/bundle2/11.1.15.md) - 30 regions
 - [11.2.5](aws/bundle2/11.2.5.md) - 31 regions
 - [11.2.12](aws/bundle2/11.2.12.md) - 30 regions
+- [11.2.15](aws/bundle2/11.2.15.md) - 30 regions
 - [12.1.7](aws/bundle2/12.1.7.md) - 30 regions
 - [12.1.9](aws/bundle2/12.1.9.md) - 30 regions
 
@@ -54,6 +57,7 @@ AMI IDs are region-specific. Each version below links to its IDs across the 33 r
 
 - [11.1.15](aws/bundle3/11.1.15.md) - 27 regions
 - [11.2.12](aws/bundle3/11.2.12.md) - 27 regions
+- [11.2.15](aws/bundle3/11.2.15.md) - 27 regions
 - [12.1.7](aws/bundle3/12.1.7.md) - 27 regions
 - [12.1.9](aws/bundle3/12.1.9.md) - 27 regions
 
@@ -65,6 +69,7 @@ AMI IDs are region-specific. Each version below links to its IDs across the 33 r
 - [11.2.9](aws/airs/11.2.9.md) - 18 regions
 - [11.2.12](aws/airs/11.2.12.md) - 30 regions
 - [12.1.7](aws/airs/12.1.7.md) - 30 regions
+- [12.1.7-h6](aws/airs/12.1.7-h6.md) - 30 regions
 
 ### Panorama
 
