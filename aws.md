@@ -15,7 +15,6 @@ AMI IDs are region-specific. Each version below links to its IDs across the 33 r
 - [11.1.6-h35](aws/byol/11.1.6-h35.md) - 31 regions
 - [11.1.10-h22](aws/byol/11.1.10-h22.md) - 31 regions
 - [11.1.10-h25](aws/byol/11.1.10-h25.md) - 31 regions
-- [11.1.13-h1](aws/byol/11.1.13-h1.md) - 32 regions
 - [11.1.13-h5](aws/byol/11.1.13-h5.md) - 31 regions
 - [11.1.15](aws/byol/11.1.15.md) - 31 regions
 - [11.2.5](aws/byol/11.2.5.md) - 28 regions
