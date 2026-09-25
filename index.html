@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PAN-OS Image Catalog</title>
+<meta name="description" content="Search PAN-OS VM-Series, Panorama and Prisma AIRS image IDs across AWS, Azure and GCP.">
+<link rel="stylesheet" href="web/style.css">
+</head>
+<body>
+<header>
+  <h1>PAN-OS Image Catalog</h1>
+  <p>
+    PAN-OS VM-Series, Panorama and Prisma AIRS image IDs across AWS, Azure and GCP.
+    Search by version, region, offer, SKU, image name or AMI ID.
+    See the <a href="https://github.com/jamesholland-uk/pan-os-image-catalog">repo</a> and
+    <a href="README.md">README</a> for the JSON feeds and how to use them from Terraform.
+  </p>
+  <p class="meta" id="generated">Loading data&hellip;</p>
+</header>
+
+<main>
+  <div id="controls">
+    <input id="search" type="search" placeholder="Search version, region, offer, SKU, image name, AMI ID&hellip;" aria-label="Search">
+
+    <div class="control-row">
+      <span class="group-label">Provider</span>
+      <div class="chipgroup" id="provider-chips"></div>
+    </div>
+
+    <div class="control-row">
+      <span class="group-label">Product</span>
+      <div class="chipgroup" id="product-chips"></div>
+    </div>
+
+    <div class="control-row">
+      <select id="licence-select" aria-label="Licence">
+        <option value="">All licences</option>
+      </select>
+
+      <label class="checkbox">
+        <input type="checkbox" id="hide-eol">
+        Hide end-of-life
+      </label>
+    </div>
+  </div>
+
+  <p id="count" class="meta"></p>
+
+  <table id="catalog">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Version</th>
+        <th>Train</th>
+        <th>Product</th>
+        <th>Licence</th>
+        <th>Provider</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <p id="empty" class="meta" hidden>No images match this filter.</p>
+</main>
+
+<footer>
+  <p class="meta">
+    Data refreshes every 6 hours from <a href="data/versions.json">data/versions.json</a>.
+    This page fetches that file directly, nothing here is pre-built.
+  </p>
+</footer>
+
+<script src="web/app.js" defer></script>
+</body>
+</html>
