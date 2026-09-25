@@ -86,6 +86,7 @@ AMI IDs are region-specific. Each version below links to its IDs across the 33 r
 - [11.2.8](aws/panorama/11.2.8.md) - 31 regions
 - [11.2.11](aws/panorama/11.2.11.md) - 30 regions
 - [11.2.12](aws/panorama/11.2.12.md) - 30 regions
+- [11.2.15](aws/panorama/11.2.15.md) - 30 regions
 - [12.1.2](aws/panorama/12.1.2.md) - 31 regions
 - [12.1.5](aws/panorama/12.1.5.md) - 30 regions
 - [12.1.7](aws/panorama/12.1.7.md) - 30 regions
