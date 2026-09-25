@@ -7,9 +7,9 @@ on:
   # Renovate's branches are never written to.
   pull_request:
     paths:
-      - "azure-processing.py"
-      - "panos_*.py"
-      - "requirements.txt"
+      - "scripts/azure-processing.py"
+      - "scripts/panos_*.py"
+      - "scripts/requirements.txt"
       - ".github/workflows/azure-actions.yml"
   schedule:
     - cron: "15 */6 * * *"
@@ -52,8 +52,8 @@ jobs:
 
       - name: Run Azure processing
         run: |-
-          pip install -r requirements.txt
-          python azure-processing.py
+          pip install -r scripts/requirements.txt
+          python scripts/azure-processing.py
         env:
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -62,14 +62,14 @@ jobs:
 
       - name: Show what would be committed
         if: github.event_name == 'pull_request'
-        run: git status --short azure.md data/ | grep . || echo "No data changes."
+        run: git status --short azure/ data/ | grep . || echo "No data changes."
 
       - name: Commit and Push
         if: github.event_name != 'pull_request'
         run: |-
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add azure.md data/
+          git add azure/ data/
           timestamp=$(date -u)
           git commit -m "Latest data: ${timestamp}" || exit 0
           git pull --rebase

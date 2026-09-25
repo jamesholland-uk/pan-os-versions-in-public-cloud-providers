@@ -1,10 +1,11 @@
 """Tests for the GCP image-name handling that sits outside panos_version."""
 
 import importlib.util
+import os
 import unittest
 
 # The processor's file name has a hyphen, so it cannot be imported normally.
-_spec = importlib.util.spec_from_file_location("gcp_processing", "gcp-processing.py")
+_spec = importlib.util.spec_from_file_location("gcp_processing", os.path.join(os.path.dirname(__file__), "gcp-processing.py"))
 gcp = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(gcp)
 

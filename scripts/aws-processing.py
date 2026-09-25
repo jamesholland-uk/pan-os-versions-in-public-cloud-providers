@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-"""Query AWS for PAN-OS AMIs and write aws.md, aws/<licence>/<version>.md and data/aws.json."""
+"""Query AWS for PAN-OS AMIs and write aws/README.md, aws/<licence>/<version>.md and data/aws.json."""
 
 import logging
 import os
@@ -231,7 +231,7 @@ def render_index(records, covered, uncovered):
         for record in rows:
             out.append(
                 f"- [{panos_output.markdown_label(record)}]"
-                f"(aws/{directory}/{record['version']}.md) "
+                f"({directory}/{record['version']}.md) "
                 f"- {len(record['amis'])} regions\n"
             )
     if uncovered:
@@ -253,7 +253,7 @@ def render_version_page(record):
     out = [f"\n # {record['version']}\n"]
     for region, ami in record["amis"].items():
         out.append(f"- {region}: {ami}\n")
-    out.append("\n[Go back to aws.md](../../aws.md) \n")
+    out.append("\n[Go back to the AWS listing](../README.md) \n")
     return "".join(out)
 
 
@@ -315,9 +315,9 @@ def main():
     records = build_records(found, versions, eol_table)
 
     if panos_output.write_text_if_changed(
-        "aws.md", render_index(records, covered, uncovered)
+        "aws/README.md", render_index(records, covered, uncovered)
     ):
-        logging.info("aws.md updated")
+        logging.info("aws/README.md updated")
     written, removed = sync_version_pages(records)
     logging.info("version pages: %d written, %d removed", written, removed)
     path, changed = panos_output.write_provider_json("aws", records)

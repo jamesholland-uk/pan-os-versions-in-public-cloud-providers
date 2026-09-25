@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-"""Query the Azure marketplace image versions and write azure.md and data/azure.json."""
+"""Query the Azure marketplace image versions and write azure/README.md and data/azure.json."""
 
 import logging
 import os
@@ -150,9 +150,9 @@ def main():
         sys.exit("no images parsed - refusing to publish an empty listing")
 
     if panos_output.write_text_if_changed(
-        "azure.md", render_markdown(records, skipped)
+        "azure/README.md", render_markdown(records, skipped)
     ):
-        logging.info("azure.md updated")
+        logging.info("azure/README.md updated")
     path, changed = panos_output.write_provider_json("azure", records)
     logging.info("%s %s", path, "updated" if changed else "unchanged")
     path, changed = panos_output.write_combined()

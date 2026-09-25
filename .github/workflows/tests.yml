@@ -6,12 +6,12 @@ on:
     branches: [main]
     paths:
       - "**.py"
-      - "requirements.txt"
+      - "scripts/requirements.txt"
       - ".github/workflows/tests.yml"
   pull_request:
     paths:
       - "**.py"
-      - "requirements.txt"
+      - "scripts/requirements.txt"
       - ".github/workflows/tests.yml"
   workflow_dispatch:
 
@@ -33,4 +33,4 @@ jobs:
       # The tests cover the parsers and output handling only, which use the
       # standard library, so no requirements need installing.
       - name: Run tests
-        run: python -m unittest discover -p "test_*.py" -v
+        run: python -m unittest discover -s scripts -p "test_*.py" -v

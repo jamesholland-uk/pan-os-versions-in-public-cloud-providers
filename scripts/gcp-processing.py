@@ -1,8 +1,8 @@
 #! /usr/bin/env python3
 
-"""Turn the two gcloud image listings into gcp.md and data/gcp.json.
+"""Turn the two gcloud image listings into gcp/README.md and data/gcp.json.
 
-Usage: gcp-processing.py <vmseries-list> <panorama-list> <airs-list>
+Usage: scripts/gcp-processing.py <vmseries-list> <panorama-list> <airs-list>
 
 Each input is one image name per line, as produced by
 `gcloud compute images list --project paloaltonetworksgcp-public`.
@@ -198,7 +198,7 @@ def render_markdown(vmseries, panorama, airs):
 def main():
     if len(sys.argv) != 4:
         sys.exit(
-            "usage: gcp-processing.py <vmseries-list> <panorama-list> <airs-list>"
+            "usage: scripts/gcp-processing.py <vmseries-list> <panorama-list> <airs-list>"
         )
 
     eol_table = panos_output.load_eol()
@@ -218,9 +218,9 @@ def main():
 
     records = vmseries + panorama + airs
     if panos_output.write_text_if_changed(
-        "gcp.md", render_markdown(vmseries, panorama, airs)
+        "gcp/README.md", render_markdown(vmseries, panorama, airs)
     ):
-        logging.info("gcp.md updated")
+        logging.info("gcp/README.md updated")
     path, changed = panos_output.write_provider_json("gcp", records)
     logging.info("%s %s", path, "updated" if changed else "unchanged")
     path, changed = panos_output.write_combined()

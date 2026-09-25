@@ -11,7 +11,7 @@ from datetime import date, datetime, timezone
 SCHEMA_VERSION = 1
 PROVIDERS = ("aws", "azure", "gcp")
 DATA_DIR = "data"
-EOL_FILE = "eol.json"
+EOL_FILE = os.path.join(os.path.dirname(__file__), "eol.json")
 
 
 def load_eol(path=EOL_FILE):

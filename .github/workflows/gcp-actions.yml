@@ -7,8 +7,8 @@ on:
   # Renovate's branches are never written to.
   pull_request:
     paths:
-      - "gcp-processing.py"
-      - "panos_*.py"
+      - "scripts/gcp-processing.py"
+      - "scripts/panos_*.py"
       - ".github/workflows/gcp-actions.yml"
   schedule:
     - cron: "30 */6 * * *"
@@ -73,18 +73,18 @@ jobs:
 
       - name: Run GCP post-processing
         run: |-
-          python gcp-processing.py gcp-list.txt gcp-rama-list.txt gcp-airs-list.txt
+          python scripts/gcp-processing.py gcp-list.txt gcp-rama-list.txt gcp-airs-list.txt
 
       - name: Show what would be committed
         if: github.event_name == 'pull_request'
-        run: git status --short gcp.md data/ | grep . || echo "No data changes."
+        run: git status --short gcp/ data/ | grep . || echo "No data changes."
 
       - name: Commit and Push
         if: github.event_name != 'pull_request'
         run: |-
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add gcp.md data/
+          git add gcp/ data/
           timestamp=$(date -u)
           git commit -m "Latest data: ${timestamp}" || exit 0
           git pull --rebase
