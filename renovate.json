@@ -1,6 +1,39 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ]
+  "extends": ["config:recommended"],
+
+  "dependencyDashboard": true,
+
+  "platformAutomerge": true,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "rebaseWhen": "conflicted",
+
+  "minimumReleaseAge": "3 days",
+  "rangeStrategy": "pin",
+
+  "packageRules": [
+    {
+      "description": "Patch bumps: automerge once the dry-run checks pass",
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
+    },
+    {
+      "description": "boto3 releases most weekdays: batch into one PR a week",
+      "matchPackageNames": ["boto3"],
+      "schedule": ["before 6am on monday"]
+    },
+    {
+      "description": "Major bumps: longer cool-down, always manual review",
+      "matchUpdateTypes": ["major"],
+      "minimumReleaseAge": "14 days",
+      "automerge": false
+    }
+  ],
+
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "minimumReleaseAge": "0 days",
+    "automerge": true
+  }
 }
